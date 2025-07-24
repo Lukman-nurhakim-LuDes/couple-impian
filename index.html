@@ -19,6 +19,7 @@
             border-radius: 1.25rem; /* Rounded corners */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease-in-out;
+            cursor: pointer; /* Indicate clickable */
         }
         .card:hover {
             transform: translateY(-5px);
@@ -36,114 +37,496 @@
             text-align: center;
             padding: 0.5rem;
         }
+        /* Styles for the custom modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            text-align: center;
+            position: relative;
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4b5563;
+        }
+        /* Active state for footer navigation */
+        .footer-nav-item.active {
+            color: #4f46e5; /* Tailwind indigo-600 */
+            font-weight: 700;
+        }
+        /* Hidden class for pages */
+        .hidden-page {
+            display: none !important; /* Added !important here */
+        }
+        /* Calendar specific styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        .calendar-day {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #e0e7ff; /* Light indigo */
+            text-align: center;
+            font-weight: 600;
+            color: #4338ca; /* Darker indigo */
+        }
+        .calendar-date {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #f0f2f5;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .calendar-date:hover {
+            background-color: #e2e8f0;
+        }
+        .calendar-date.has-event {
+            background-color: #93c5fd; /* Blue-300 */
+            color: #1e40af; /* Blue-800 */
+            font-weight: 700;
+        }
+        .calendar-header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #374151;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4f46e5;
+        }
+        /* Habits progress bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 1rem;
+            background-color: #4CAF50; /* Green */
+            width: 0%;
+            border-radius: 0.5rem;
+            transition: width 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center min-h-screen p-4 sm:p-6 lg:p-8">
 
     <!-- Header Section -->
     <header class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-between items-center mb-8">
-        <div class="text-gray-700 font-semibold text-lg sm:text-xl">Aku</div>
+        <!-- Icon Aku -->
+        <div class="flex items-center">
+            <img src="icons/Aku.png" alt="Aku Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Aku';">
+        </div>
+        
         <div class="text-center">
             <h1 class="text-2xl sm:text-3xl font-bold text-indigo-700">Couple GrowUp</h1>
             <p class="text-sm sm:text-base text-gray-600 mt-1">Petualangan Menuju Impian</p>
         </div>
-        <div class="text-gray-700 font-semibold text-lg sm:text-xl">Kamu</div>
+        
+        <!-- Icon Kamu -->
+        <div class="flex items-center">
+            <img src="icons/Kamu.png" alt="Kamu Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kamu';">
+        </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- User ID Display -->
+    <div class="w-full max-w-4xl text-right text-sm text-gray-600 mb-4">
+        User ID: <span id="user-id-display" class="font-mono text-gray-800">Loading...</span>
+    </div>
+
+    <!-- Main Content Area (Home Page) -->
+    <main id="home-page" class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
         <!-- Left Column - Menu Items -->
         <div class="flex flex-col space-y-6">
             <!-- Keuangan Card -->
-            <div class="card p-4 flex flex-col items-center text-center">
+            <div id="keuangan-card" class="card p-4 flex flex-col items-center text-center">
                 <div class="icon-placeholder mb-3">
-                    <!-- Placeholder for Keuangan Icon -->
-                    <img src="assets/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
+                    <img src="icons/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
                 </div>
                 <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Keuangan</h2>
             </div>
             <!-- Tabungan Card -->
-            <div class="card p-4 flex flex-col items-center text-center">
+            <div id="tabungan-card" class="card p-4 flex flex-col items-center text-center">
                 <div class="icon-placeholder mb-3">
-                    <!-- Placeholder for Tabungan Icon -->
-                    <img src="assets/tabungan.png" alt="Tabungan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
+                    <img src="icons/Tabungan.png" alt="Tabungan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
                 </div>
                 <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Tabungan</h2>
             </div>
         </div>
 
-        <!-- Center Column - Monitor Event -->
-        <div class="card p-6 sm:p-8 flex flex-col items-center justify-center text-center col-span-1 md:col-span-1">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Monitor Event</h2>
-            <p class="text-base sm:text-lg text-gray-600">Lihat semua aktivitas ataupun event yang dibuat di sini.</p>
-            <!-- You can add more content here for the event monitor -->
+        <!-- Center Column - Monitor Event (Static Content Area) -->
+        <div id="monitor-event-card" class="card p-6 sm:p-8 flex flex-col items-center justify-center text-center col-span-1 md:col-span-1">
+            <h2 id="monitor-event-title" class="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Monitor Event</h2>
+            <div id="monitor-event-content" class="text-base sm:text-lg text-gray-600">
+                Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.
+            </div>
         </div>
 
         <!-- Right Column - Menu Items -->
         <div class="flex flex-col space-y-6">
             <!-- Game Card -->
-            <div class="card p-4 flex flex-col items-center text-center">
+            <div id="game-card" class="card p-4 flex flex-col items-center text-center">
                 <div class="icon-placeholder mb-3">
-                    <!-- Placeholder for Game Icon -->
-                    <img src="assets/game.png" alt="Game Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
+                    <img src="icons/Game-time.png" alt="Game Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
                 </div>
                 <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Game</h2>
             </div>
             <!-- Pasangan Card -->
-            <div class="card p-4 flex flex-col items-center text-center">
+            <div id="pasangan-card" class="card p-4 flex flex-col items-center text-center">
                 <div class="icon-placeholder mb-3">
-                    <!-- Placeholder for Pasangan Icon -->
-                    <img src="assets/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
+                    <img src="icons/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
                 </div>
                 <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Pasangan</h2>
             </div>
         </div>
     </main>
 
+    <!-- Keuangan Page -->
+    <div id="keuangan-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Atur Pemasukan & Pengeluaran</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Kelola keuangan Anda dengan mudah di sini. Tambahkan pemasukan dan catat setiap pengeluaran.</p>
+        
+        <!-- Income and Expense Input Forms -->
+        <div class="w-full max-w-md space-y-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="income-amount" class="text-gray-700 text-sm font-medium mb-1">Jumlah Pemasukan:</label>
+                <input type="number" id="income-amount" placeholder="Masukkan jumlah pemasukan" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label for="income-desc" class="text-gray-700 text-sm font-medium mb-1 mt-2">Deskripsi Pemasukan:</label>
+                <input type="text" id="income-desc" placeholder="Contoh: Gaji bulanan" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="add-income-btn" class="mt-4 w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors">Tambah Pemasukan</button>
+            </div>
+
+            <div class="flex flex-col items-start w-full">
+                <label for="expense-amount" class="text-gray-700 text-sm font-medium mb-1">Jumlah Pengeluaran:</label>
+                <input type="number" id="expense-amount" placeholder="Masukkan jumlah pengeluaran" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label for="expense-desc" class="text-gray-700 text-sm font-medium mb-1 mt-2">Deskripsi Pengeluaran:</label>
+                <input type="text" id="expense-desc" placeholder="Contoh: Belanja kebutuhan" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="add-expense-btn" class="mt-4 w-full px-6 py-3 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition-colors">Tambah Pengeluaran</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Ringkasan Keuangan</h3>
+        <div class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-left">
+            <p class="text-gray-700 text-lg">Total Pemasukan: <span id="total-income" class="font-semibold text-green-700">Rp 0</span></p>
+            <p class="text-gray-700 text-lg">Total Pengeluaran: <span id="total-expense" class="font-semibold text-red-700">Rp 0</span></p>
+            <p class="text-gray-800 text-xl mt-2">Saldo Bersih: <span id="net-balance" class="font-bold text-indigo-700">Rp 0</span></p>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Riwayat Transaksi</h3>
+        <div id="transaction-history" class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-left overflow-y-auto max-h-60">
+            <!-- Transaction items will be appended here -->
+            <p class="text-gray-500">Belum ada transaksi.</p>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Tabungan Page -->
+    <div id="tabungan-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Atur Tabungan</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Kelola tujuan tabungan Anda di sini. Tambahkan tujuan, pantau progres, dan catat setiap setoran.</p>
+        
+        <!-- Savings Goal Input Form -->
+        <div class="w-full max-w-md space-y-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="saving-goal-name" class="text-gray-700 text-sm font-medium mb-1">Nama Tujuan Tabungan:</label>
+                <input type="text" id="saving-goal-name" placeholder="Contoh: Liburan impian" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label for="saving-goal-amount" class="text-gray-700 text-sm font-medium mb-1 mt-2">Target Jumlah Tabungan:</label>
+                <input type="number" id="saving-goal-amount" placeholder="Masukkan target jumlah" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="add-saving-goal-btn" class="mt-4 w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Tambah Tujuan Tabungan</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Daftar Tujuan Tabungan</h3>
+        <div id="saving-goals-list" class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-left overflow-y-auto max-h-60">
+            <!-- Saving goals will be appended here -->
+            <p class="text-gray-500">Belum ada tujuan tabungan.</p>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Game Page -->
+    <div id="game-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Game Seru</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Mainkan game interaktif bersama pasangan untuk mempererat hubungan dan menciptakan momen tak terlupakan.</p>
+        <!-- Add more specific content for Game feature here -->
+        <p class="text-gray-600 mt-4">Konten game akan ditambahkan di sini!</p>
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Pasangan Page -->
+    <div id="pasangan-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Hubungan Harmonis</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Fitur ini membantu Anda menjaga komunikasi dan keharmonisan dalam hubungan. Temukan ide kencan, tantangan pasangan, dan lainnya!</p>
+        <!-- Add more specific content for Pasangan feature here -->
+        <p class="text-gray-600 mt-4">Konten fitur pasangan akan ditambahkan di sini!</p>
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Dasbor Page -->
+    <div id="dasbor-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Dasbor Anda</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Selamat datang di Dasbor Anda! Ini adalah ringkasan aktivitas dan progres Anda.</p>
+        
+        <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <!-- Scorecards -->
+            <div class="bg-blue-100 p-4 rounded-lg shadow text-left">
+                <h3 class="font-semibold text-blue-800 text-lg mb-2">Ringkasan Keuangan</h3>
+                <p class="text-gray-700">Pemasukan: <span id="dashboard-income" class="font-bold text-green-700">Rp 0</span></p>
+                <p class="text-gray-700">Pengeluaran: <span id="dashboard-expense" class="font-bold text-red-700">Rp 0</span></p>
+                <p class="text-gray-800 text-xl mt-2">Saldo: <span id="dashboard-balance" class="font-bold text-indigo-700">Rp 0</span></p>
+            </div>
+            <div class="bg-green-100 p-4 rounded-lg shadow text-left">
+                <h3 class="font-semibold text-green-800 text-lg mb-2">Progres Tabungan</h3>
+                <p class="text-gray-700">Tujuan Aktif: <span id="dashboard-saving-goals" class="font-bold">0</span></p>
+                <p class="text-gray-700">Total Target: <span id="dashboard-total-saving-target" class="font-bold">Rp 0</span></p>
+            </div>
+            <div class="bg-purple-100 p-4 rounded-lg shadow text-left">
+                <h3 class="font-semibold text-purple-800 text-lg mb-2">Progres Kebiasaan</h3>
+                <p class="text-gray-700">Kebiasaan Aktif: <span id="dashboard-active-habits" class="font-bold">0</span></p>
+                <p class="text-gray-700">Selesai Hari Ini: <span id="dashboard-completed-habits" class="font-bold">0</span></p>
+            </div>
+            <div class="bg-yellow-100 p-4 rounded-lg shadow text-left">
+                <h3 class="font-semibold text-yellow-800 text-lg mb-2">Wishlist</h3>
+                <p class="text-gray-700">Item Aktif: <span id="dashboard-active-wishlist" class="font-bold">0</span></p>
+                <p class="text-gray-700">Item Terpenuhi: <span id="dashboard-fulfilled-wishlist" class="font-bold">0</span></p>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Grafik Keuangan</h3>
+        <div class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-center">
+            <p class="text-gray-600">Placeholder untuk Grafik Line Chart (Pemasukan vs Pengeluaran)</p>
+            <div class="w-full h-48 bg-gray-200 rounded-lg mt-4 flex items-center justify-center text-gray-500">
+                [Grafik Line Chart di sini]
+            </div>
+        </div>
+        <div class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-center mt-6">
+            <p class="text-gray-600">Placeholder untuk Donut/Pie Chart (Distribusi Pengeluaran)</p>
+            <div class="w-full h-48 bg-gray-200 rounded-lg mt-4 flex items-center justify-center text-gray-500">
+                [Grafik Donut/Pie Chart di sini]
+            </div>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Kalender Page -->
+    <div id="kalender-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Kalender Event</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Atur jadwal dan event penting Anda bersama pasangan di sini.</p>
+        
+        <div class="w-full max-w-md">
+            <div class="calendar-header">
+                <button id="prev-month-btn">&lt;</button>
+                <span id="current-month-year"></span>
+                <button id="next-month-btn">&gt;</button>
+            </div>
+            <div id="calendar-grid" class="calendar-grid">
+                <!-- Days of the week -->
+                <div class="calendar-day">Min</div>
+                <div class="calendar-day">Sen</div>
+                <div class="calendar-day">Sel</div>
+                <div class="calendar-day">Rab</div>
+                <div class="calendar-day">Kam</div>
+                <div class="calendar-day">Jum</div>
+                <div class="calendar-day">Sab</div>
+                <!-- Dates will be populated here by JS -->
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Tambah Event Baru</h3>
+        <div class="w-full max-w-md space-y-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="event-date" class="text-gray-700 text-sm font-medium mb-1">Tanggal Event:</label>
+                <input type="date" id="event-date" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label for="event-name" class="text-gray-700 text-sm font-medium mb-1 mt-2">Nama Event:</label>
+                <input type="text" id="event-name" placeholder="Contoh: Kencan malam" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label for="event-description" class="text-gray-700 text-sm font-medium mb-1 mt-2">Deskripsi Event (Opsional):</label>
+                <textarea id="event-description" placeholder="Detail event..." class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-24"></textarea>
+                <button id="add-event-btn" class="mt-4 w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Tambah Event</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Daftar Event</h3>
+        <div id="event-list" class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-left overflow-y-auto max-h-60">
+            <p class="text-gray-500">Belum ada event.</p>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Habits Page -->
+    <div id="habits-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Lacak Kebiasaan</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Lacak kebiasaan baik Anda dan pasangan untuk pertumbuhan bersama.</p>
+        
+        <div class="w-full max-w-md space-y-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="habit-name" class="text-gray-700 text-sm font-medium mb-1">Nama Kebiasaan Baru:</label>
+                <input type="text" id="habit-name" placeholder="Contoh: Olahraga pagi" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="add-habit-btn" class="mt-4 w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors">Tambah Kebiasaan</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Daftar Kebiasaan</h3>
+        <div class="w-full max-w-2xl bg-gray-100 p-4 rounded-lg overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kebiasaan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progres</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Selesai Hari Ini</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="habits-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Habits will be populated here -->
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Belum ada kebiasaan.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Pic Drop Page -->
+    <div id="picdrop-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Pic Drop</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Bagikan momen indah Anda dengan Pic Drop. (Fungsionalitas upload foto ke server tidak tersedia dalam demo ini).</p>
+        
+        <div class="w-full max-w-md space-y-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="photo-caption" class="text-gray-700 text-sm font-medium mb-1">Keterangan Foto:</label>
+                <input type="text" id="photo-caption" placeholder="Contoh: Kencan di pantai" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="file" id="photo-upload-input" accept="image/*" class="hidden">
+                <button id="select-photo-btn" class="mt-4 w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Pilih Foto</button>
+                <button id="upload-photo-btn" class="mt-2 w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors hidden">Unggah Foto (Simulasi)</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Galeri Foto</h3>
+        <div id="photo-gallery" class="w-full max-w-2xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 bg-gray-100 p-4 rounded-lg overflow-y-auto max-h-96">
+            <!-- Photos will be populated here -->
+            <p class="col-span-full text-gray-500 text-center">Belum ada foto.</p>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
+    <!-- Wishlist Page -->
+    <div id="wishlist-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Daftar Keinginan</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6">Buat daftar keinginan bersama untuk masa depan.</p>
+        
+        <div class="w-full max-w-md space-y-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="wishlist-item-name" class="text-gray-700 text-sm font-medium mb-1">Nama Item:</label>
+                <input type="text" id="wishlist-item-name" placeholder="Contoh: Tiket konser" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label for="wishlist-item-price" class="text-gray-700 text-sm font-medium mb-1 mt-2">Perkiraan Harga (Opsional):</label>
+                <input type="number" id="wishlist-item-price" placeholder="Contoh: 500000" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="add-wishlist-item-btn" class="mt-4 w-full px-6 py-3 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition-colors">Tambah Item</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Daftar Item</h3>
+        <div id="wishlist-items-list" class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-left overflow-y-auto max-h-60">
+            <p class="text-gray-500">Belum ada item di daftar keinginan.</p>
+        </div>
+
+        <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
+    </div>
+
     <!-- Footer Navigation -->
-    <footer class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-around items-center">
+    <footer id="main-footer" class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-around items-center">
         <!-- Dasbor Card -->
-        <div class="flex flex-col items-center text-center">
+        <div id="dasbor-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer active">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <!-- Placeholder for Dasbor Icon -->
-                <img src="icons/dasbor.png" alt="Dasbor Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Dasbor';">
+                <img src="icons/Dashboard.png" alt="Dasbor Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Dasbor';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Dasbor</p>
         </div>
         <!-- Kalender Card -->
-        <div class="flex flex-col items-center text-center">
+        <div id="kalender-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <!-- Placeholder for Kalender Icon -->
-                <img src="icons/kalender.png" alt="Kalender Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
+                <img src="icons/Calendar.png" alt="Kalender Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Kalender</p>
         </div>
         <!-- Habits Card -->
-        <div class="flex flex-col items-center text-center">
+        <div id="habits-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <!-- Placeholder for Habits Icon -->
-                <img src="icons/habits.png" alt="Habits Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Habits';">
+                <img src="icons/Habits.png" alt="Habits Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Habits';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Habits</p>
         </div>
         <!-- Pic Drop Card -->
-        <div class="flex flex-col items-center text-center">
+        <div id="picdrop-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <!-- Placeholder for Pic Drop Icon -->
-                <img src="icons/picdrop.png" alt="Pic Drop Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
+                <img src="icons/pic-dropping.png" alt="Pic Drop Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Pic Drop</p>
         </div>
         <!-- Wishlist Card -->
-        <div class="flex flex-col items-center text-center">
+        <div id="wishlist-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <!-- Placeholder for Wishlist Icon -->
-                <img src="icons/wishlist.png" alt="Wishlist Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Wishlist';">
+                <img src="icons/Wishlist.png" alt="Wishlist Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Wishlist';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Wishlist</p>
         </div>
     </footer>
+
+    <!-- Custom Modal Structure -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" onclick="closeModal()">&times;</button>
+            <p id="modal-message" class="text-lg text-gray-800"></p>
+        </div>
+    </div>
 
     <!-- Service Worker Registration -->
     <script>
@@ -158,6 +541,943 @@
                     });
             });
         }
+
+        // Firebase Configuration (from your input)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJvImC_0c11FAXRmDRLkEAMGC1tXdj5ns",
+            authDomain: "couplegrowup.firebaseapp.com",
+            projectId: "couplegrowup",
+            storageBucket: "couplegrowup.firebasestorage.app",
+            messagingSenderId: "566350672167",
+            appId: "1:566350672167:web:357408665e9cc3ddfeb902"
+        };
+        // Global variables for Firebase instances
+        let app;
+        let db;
+        let auth;
+        let userId;
+        let isAuthReady = false; // Flag to ensure auth is ready before Firestore ops
+
+        // Firebase SDK Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Initialize Firebase and set up authentication
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Authenticate user
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Listen for auth state changes to get userId and initialize Firestore listeners
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('user-id-display').textContent = userId;
+                        isAuthReady = true;
+                        console.log("Firebase initialized and user authenticated:", userId);
+
+                        // Initialize Firestore listeners after authentication
+                        setupFirestoreListeners();
+                    } else {
+                        userId = null;
+                        document.getElementById('user-id-display').textContent = 'Not Authenticated';
+                        isAuthReady = false;
+                        console.log("User not authenticated.");
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase or authenticating:", error);
+                document.getElementById('user-id-display').textContent = 'Error loading user ID';
+                showModal('Terjadi kesalahan saat memuat aplikasi. Mohon coba lagi.');
+            }
+        });
+
+        // Function to set up Firestore listeners
+        function setupFirestoreListeners() {
+            if (!isAuthReady || !userId) {
+                console.warn("Firebase not ready or userId not available for Firestore listeners.");
+                return;
+            }
+
+            // Firestore listener for Transactions (Keuangan)
+            const transactionsCollectionRef = collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/transactions`);
+            onSnapshot(query(transactionsCollectionRef), (snapshot) => {
+                transactions = [];
+                snapshot.forEach(doc => {
+                    transactions.push({ id: doc.id, ...doc.data() });
+                });
+                updateFinancialSummary();
+                renderTransactionHistory();
+                updateDashboardFinance(); // Update dashboard
+            }, (error) => {
+                console.error("Error fetching transactions:", error);
+                showModal('Gagal memuat data transaksi. Silakan coba lagi.');
+            });
+
+            // Firestore listener for Saving Goals (Tabungan)
+            const savingGoalsCollectionRef = collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/savingGoals`);
+            onSnapshot(query(savingGoalsCollectionRef), (snapshot) => {
+                savingGoals = [];
+                snapshot.forEach(doc => {
+                    savingGoals.push({ id: doc.id, ...doc.data() });
+                });
+                renderSavingGoals();
+                updateDashboardSavings(); // Update dashboard
+            }, (error) => {
+                console.error("Error fetching saving goals:", error);
+                showModal('Gagal memuat data tujuan tabungan. Silakan coba lagi.');
+            });
+
+            // Firestore listener for Events (Kalender)
+            const eventsCollectionRef = collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/events`);
+            onSnapshot(query(eventsCollectionRef), (snapshot) => {
+                events = [];
+                snapshot.forEach(doc => {
+                    events.push({ id: doc.id, ...doc.data() });
+                });
+                renderCalendar();
+                renderEventList();
+            }, (error) => {
+                console.error("Error fetching events:", error);
+                showModal('Gagal memuat data event. Silakan coba lagi.');
+            });
+
+            // Firestore listener for Habits
+            const habitsCollectionRef = collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/habits`);
+            onSnapshot(query(habitsCollectionRef), (snapshot) => {
+                habits = [];
+                snapshot.forEach(doc => {
+                    habits.push({ id: doc.id, ...doc.data() });
+                });
+                renderHabitsTable();
+                updateDashboardHabits(); // Update dashboard
+            }, (error) => {
+                console.error("Error fetching habits:", error);
+                showModal('Gagal memuat data kebiasaan. Silakan coba lagi.');
+            });
+
+            // Firestore listener for Wishlist
+            const wishlistCollectionRef = collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/wishlist`);
+            onSnapshot(query(wishlistCollectionRef), (snapshot) => {
+                wishlistItems = [];
+                snapshot.forEach(doc => {
+                    wishlistItems.push({ id: doc.id, ...doc.data() });
+                });
+                renderWishlistItems();
+                updateDashboardWishlist(); // Update dashboard
+            }, (error) => {
+                console.error("Error fetching wishlist items:", error);
+                showModal('Gagal memuat daftar keinginan. Silakan coba lagi.');
+            });
+        }
+
+
+        // Get main page elements
+        const homePage = document.getElementById('home-page');
+        const mainFooter = document.getElementById('main-footer'); // Get the footer element
+
+        // Get feature pages
+        const keuanganPage = document.getElementById('keuangan-page');
+        const tabunganPage = document.getElementById('tabungan-page');
+        const gamePage = document.getElementById('game-page');
+        const pasanganPage = document.getElementById('pasangan-page');
+        const dasborPage = document.getElementById('dasbor-page');
+        const kalenderPage = document.getElementById('kalender-page');
+        const habitsPage = document.getElementById('habits-page');
+        const picdropPage = document.getElementById('picdrop-page');
+        const wishlistPage = document.getElementById('wishlist-page');
+
+
+        // Get feature cards (top section)
+        const keuanganCard = document.getElementById('keuangan-card');
+        const tabunganCard = document.getElementById('tabungan-card');
+        const gameCard = document.getElementById('game-card');
+        const pasanganCard = document.getElementById('pasangan-card');
+
+        // Get Monitor Event elements (static on home page)
+        const monitorEventTitle = document.getElementById('monitor-event-title');
+        const monitorEventContent = document.getElementById('monitor-event-content');
+
+        // Get footer navigation items
+        const footerNavItems = document.querySelectorAll('.footer-nav-item');
+
+        // Get modal elements
+        const customModal = document.getElementById('custom-modal');
+        const modalMessage = document.getElementById('modal-message');
+
+        // Get Keuangan page elements
+        const incomeAmountInput = document.getElementById('income-amount');
+        const incomeDescInput = document.getElementById('income-desc');
+        const addIncomeBtn = document.getElementById('add-income-btn');
+        const expenseAmountInput = document.getElementById('expense-amount');
+        const expenseDescInput = document.getElementById('expense-desc');
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        const totalIncomeSpan = document.getElementById('total-income');
+        const totalExpenseSpan = document.getElementById('total-expense');
+        const netBalanceSpan = document.getElementById('net-balance');
+        const transactionHistoryDiv = document.getElementById('transaction-history');
+
+        let totalIncome = 0;
+        let totalExpense = 0;
+        let transactions = []; // This will now be populated by Firestore listener
+
+        // Get Tabungan page elements
+        const savingGoalNameInput = document.getElementById('saving-goal-name');
+        const savingGoalAmountInput = document.getElementById('saving-goal-amount');
+        const addSavingGoalBtn = document.getElementById('add-saving-goal-btn');
+        const savingGoalsListDiv = document.getElementById('saving-goals-list');
+
+        let savingGoals = []; // This will now be populated by Firestore listener
+
+        // Get Kalender page elements
+        const currentMonthYearSpan = document.getElementById('current-month-year');
+        const prevMonthBtn = document.getElementById('prev-month-btn');
+        const nextMonthBtn = document.getElementById('next-month-btn');
+        const calendarGrid = document.getElementById('calendar-grid');
+        const eventDateInput = document.getElementById('event-date');
+        const eventNameInput = document.getElementById('event-name');
+        const eventDescriptionInput = document.getElementById('event-description');
+        const addEventBtn = document.getElementById('add-event-btn');
+        const eventListDiv = document.getElementById('event-list');
+
+        let currentCalendarDate = new Date();
+        let events = []; // This will be populated by Firestore listener
+
+        // Get Habits page elements
+        const habitNameInput = document.getElementById('habit-name');
+        const addHabitBtn = document.getElementById('add-habit-btn');
+        const habitsTableBody = document.getElementById('habits-table-body');
+
+        let habits = []; // This will be populated by Firestore listener
+
+        // Get Pic Drop page elements
+        const photoCaptionInput = document.getElementById('photo-caption');
+        const photoUploadInput = document.getElementById('photo-upload-input');
+        const selectPhotoBtn = document.getElementById('select-photo-btn');
+        const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+        const photoGalleryDiv = document.getElementById('photo-gallery');
+
+        let uploadedPhotos = []; // This will store simulated photo data
+
+        // Get Wishlist page elements
+        const wishlistItemNameInput = document.getElementById('wishlist-item-name');
+        const wishlistItemPriceInput = document.getElementById('wishlist-item-price');
+        const addWishlistItemBtn = document.getElementById('add-wishlist-item-btn');
+        const wishlistItemsListDiv = document.getElementById('wishlist-items-list');
+
+        let wishlistItems = []; // This will be populated by Firestore listener
+
+        // Get Dashboard elements
+        const dashboardIncomeSpan = document.getElementById('dashboard-income');
+        const dashboardExpenseSpan = document.getElementById('dashboard-expense');
+        const dashboardBalanceSpan = document.getElementById('dashboard-balance');
+        const dashboardSavingGoalsSpan = document.getElementById('dashboard-saving-goals');
+        const dashboardTotalSavingTargetSpan = document.getElementById('dashboard-total-saving-target');
+        const dashboardActiveHabitsSpan = document.getElementById('dashboard-active-habits');
+        const dashboardCompletedHabitsSpan = document.getElementById('dashboard-completed-habits');
+        const dashboardActiveWishlistSpan = document.getElementById('dashboard-active-wishlist');
+        const dashboardFulfilledWishlistSpan = document.getElementById('dashboard-fulfilled-wishlist');
+
+
+        // Function to show custom modal (for general messages/errors)
+        function showModal(message) {
+            modalMessage.textContent = message;
+            customModal.classList.add('show');
+        }
+
+        // Function to close custom modal
+        function closeModal() {
+            customModal.classList.remove('show');
+        }
+
+        // Function to show a specific page and hide others, and manage footer visibility
+        function showPage(pageId) {
+            // Hide all main content areas
+            homePage.classList.add('hidden-page');
+            keuanganPage.classList.add('hidden-page');
+            tabunganPage.classList.add('hidden-page');
+            gamePage.classList.add('hidden-page');
+            pasanganPage.classList.add('hidden-page');
+            dasborPage.classList.add('hidden-page');
+            kalenderPage.classList.add('hidden-page');
+            habitsPage.classList.add('hidden-page');
+            picdropPage.classList.add('hidden-page');
+            wishlistPage.classList.add('hidden-page');
+            
+            mainFooter.classList.add('hidden-page'); // Hide the footer by default
+
+            // Show the requested page
+            const pageToShow = document.getElementById(pageId);
+            if (pageToShow) {
+                pageToShow.classList.remove('hidden-page');
+            }
+
+            // If navigating back to home, show the footer and reset active state
+            if (pageId === 'home-page') {
+                mainFooter.classList.remove('hidden-page'); // Show footer when on home page
+                // Ensure Dasbor is active when returning to home page
+                footerNavItems.forEach(item => item.classList.remove('active'));
+                document.getElementById('dasbor-nav').classList.add('active');
+                // Set Monitor Event content to default Dasbor message
+                monitorEventTitle.textContent = 'Monitor Event';
+                monitorEventContent.textContent = 'Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.';
+            }
+        }
+
+        // Event Listeners for Main Feature Cards (top section)
+        keuanganCard.addEventListener('click', () => {
+            showPage('keuangan-page');
+        });
+
+        tabunganCard.addEventListener('click', () => {
+            showPage('tabungan-page');
+        });
+
+        gameCard.addEventListener('click', () => {
+            showPage('game-page');
+        });
+
+        pasanganCard.addEventListener('click', () => {
+            showPage('pasangan-page');
+        });
+
+        // Function to update main content (Monitor Event) - now only used for initial load or if explicitly needed
+        // This function no longer handles page transitions or footer active states
+        function updateMonitorEventContent(title, content) {
+            monitorEventTitle.textContent = title;
+            monitorEventContent.textContent = content;
+        }
+
+        // --- Keuangan Feature Logic ---
+        function formatCurrency(amount) {
+            return `Rp ${new Intl.NumberFormat('id-ID').format(amount)}`;
+        }
+
+        function updateFinancialSummary() {
+            totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const netBalance = totalIncome - totalExpense;
+
+            totalIncomeSpan.textContent = formatCurrency(totalIncome);
+            totalExpenseSpan.textContent = formatCurrency(totalExpense);
+            netBalanceSpan.textContent = formatCurrency(netBalance);
+
+            // Set color for net balance
+            if (netBalance < 0) {
+                netBalanceSpan.classList.remove('text-indigo-700');
+                netBalanceSpan.classList.add('text-red-700');
+            } else {
+                netBalanceSpan.classList.remove('text-red-700');
+                netBalanceSpan.classList.add('text-indigo-700');
+            }
+        }
+
+        function renderTransactionHistory() {
+            transactionHistoryDiv.innerHTML = ''; // Clear previous entries
+            if (transactions.length === 0) {
+                transactionHistoryDiv.innerHTML = '<p class="text-gray-500">Belum ada transaksi.</p>';
+                return;
+            }
+
+            // Sort transactions by date descending
+            const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedTransactions.forEach((t, index) => {
+                const transactionItem = document.createElement('div');
+                transactionItem.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-200');
+                if (index === sortedTransactions.length - 1) {
+                    transactionItem.classList.remove('border-b'); // Remove border for the last item
+                }
+
+                const amountClass = t.type === 'income' ? 'text-green-600' : 'text-red-600';
+                const sign = t.type === 'income' ? '+' : '-';
+
+                transactionItem.innerHTML = `
+                    <div class="flex flex-col items-start">
+                        <span class="font-medium text-gray-800">${t.description}</span>
+                        <span class="text-xs text-gray-500">${new Date(t.date).toLocaleDateString('id-ID')}</span>
+                    </div>
+                    <span class="font-semibold ${amountClass}">${sign} ${formatCurrency(t.amount)}</span>
+                `;
+                transactionHistoryDiv.appendChild(transactionItem);
+            });
+        }
+
+        addIncomeBtn.addEventListener('click', async () => {
+            const amount = parseFloat(incomeAmountInput.value);
+            const description = incomeDescInput.value.trim();
+
+            if (isNaN(amount) || amount <= 0 || !description) {
+                showModal('Mohon masukkan jumlah dan deskripsi pemasukan yang valid.');
+                return;
+            }
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/transactions`), {
+                    type: 'income',
+                    amount: amount,
+                    description: description,
+                    date: new Date().toISOString()
+                });
+                incomeAmountInput.value = '';
+                incomeDescInput.value = '';
+            } catch (e) {
+                console.error("Error adding income document: ", e);
+                showModal('Gagal menambahkan pemasukan. Silakan coba lagi.');
+            }
+        });
+
+        addExpenseBtn.addEventListener('click', async () => {
+            const amount = parseFloat(expenseAmountInput.value);
+            const description = expenseDescInput.value.trim();
+
+            if (isNaN(amount) || amount <= 0 || !description) {
+                showModal('Mohon masukkan jumlah dan deskripsi pengeluaran yang valid.');
+                return;
+            }
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/transactions`), {
+                    type: 'expense',
+                    amount: amount,
+                    description: description,
+                    date: new Date().toISOString()
+                });
+                expenseAmountInput.value = '';
+                expenseDescInput.value = '';
+            } catch (e) {
+                console.error("Error adding expense document: ", e);
+                showModal('Gagal menambahkan pengeluaran. Silakan coba lagi.');
+            }
+        });
+
+        // --- Tabungan Feature Logic ---
+        function renderSavingGoals() {
+            savingGoalsListDiv.innerHTML = ''; // Clear previous entries
+            if (savingGoals.length === 0) {
+                savingGoalsListDiv.innerHTML = '<p class="text-gray-500">Belum ada tujuan tabungan.</p>';
+                return;
+            }
+
+            savingGoals.forEach((goal) => {
+                const goalItem = document.createElement('div');
+                goalItem.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-200');
+                
+                goalItem.innerHTML = `
+                    <div class="flex flex-col items-start">
+                        <span class="font-medium text-gray-800">${goal.name}</span>
+                        <span class="text-xs text-gray-500">Target: ${formatCurrency(goal.targetAmount)}</span>
+                    </div>
+                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="deleteSavingGoal('${goal.id}')">Hapus</button>
+                `;
+                savingGoalsListDiv.appendChild(goalItem);
+            });
+        }
+
+        async function deleteSavingGoal(goalId) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            try {
+                await deleteDoc(doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/savingGoals`, goalId));
+            } catch (e) {
+                console.error("Error deleting saving goal: ", e);
+                showModal('Gagal menghapus tujuan tabungan. Silakan coba lagi.');
+            }
+        }
+
+        addSavingGoalBtn.addEventListener('click', async () => {
+            const name = savingGoalNameInput.value.trim();
+            const targetAmount = parseFloat(savingGoalAmountInput.value);
+
+            if (!name || isNaN(targetAmount) || targetAmount <= 0) {
+                showModal('Mohon masukkan nama dan target jumlah tabungan yang valid.');
+                return;
+            }
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/savingGoals`), {
+                    name: name,
+                    targetAmount: targetAmount,
+                    currentAmount: 0, // Start with 0 current amount
+                    createdAt: new Date().toISOString()
+                });
+                savingGoalNameInput.value = '';
+                savingGoalAmountInput.value = '';
+            } catch (e) {
+                console.error("Error adding saving goal: ", e);
+                showModal('Gagal menambahkan tujuan tabungan. Silakan coba lagi.');
+            }
+        });
+
+        // --- Kalender Feature Logic ---
+        function renderCalendar() {
+            calendarGrid.innerHTML = ''; // Clear existing calendar
+            currentMonthYearSpan.textContent = currentCalendarDate.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+
+            // Add day names
+            const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+            dayNames.forEach(day => {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('calendar-day');
+                dayDiv.textContent = day;
+                calendarGrid.appendChild(dayDiv);
+            });
+
+            const firstDayOfMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+            const lastDayOfMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+            const numDaysInMonth = lastDayOfMonth.getDate();
+            const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+            // Add empty divs for days before the 1st of the month
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const emptyDiv = document.createElement('div');
+                calendarGrid.appendChild(emptyDiv);
+            }
+
+            // Add days of the month
+            for (let day = 1; day <= numDaysInMonth; day++) {
+                const dateDiv = document.createElement('div');
+                dateDiv.classList.add('calendar-date');
+                dateDiv.textContent = day;
+
+                const fullDate = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), day);
+                const formattedDate = fullDate.toISOString().split('T')[0]; // YYYY-MM-DD
+
+                // Check if there's an event on this date
+                const hasEvent = events.some(event => event.date === formattedDate);
+                if (hasEvent) {
+                    dateDiv.classList.add('has-event');
+                }
+
+                dateDiv.addEventListener('click', () => {
+                    showModal(`Event pada ${fullDate.toLocaleDateString('id-ID')}: ${events.filter(e => e.date === formattedDate).map(e => e.name).join(', ') || 'Tidak ada event.'}`);
+                });
+
+                calendarGrid.appendChild(dateDiv);
+            }
+        }
+
+        prevMonthBtn.addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        addEventBtn.addEventListener('click', async () => {
+            const date = eventDateInput.value;
+            const name = eventNameInput.value.trim();
+            const description = eventDescriptionInput.value.trim();
+
+            if (!date || !name) {
+                showModal('Mohon masukkan tanggal dan nama event yang valid.');
+                return;
+            }
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/events`), {
+                    date: date,
+                    name: name,
+                    description: description,
+                    createdAt: new Date().toISOString()
+                });
+                eventDateInput.value = '';
+                eventNameInput.value = '';
+                eventDescriptionInput.value = '';
+            } catch (e) {
+                console.error("Error adding event: ", e);
+                showModal('Gagal menambahkan event. Silakan coba lagi.');
+            }
+        });
+
+        function renderEventList() {
+            eventListDiv.innerHTML = '';
+            if (events.length === 0) {
+                eventListDiv.innerHTML = '<p class="text-gray-500">Belum ada event.</p>';
+                return;
+            }
+
+            // Sort events by date ascending
+            const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            sortedEvents.forEach((event) => {
+                const eventItem = document.createElement('div');
+                eventItem.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-200');
+                eventItem.innerHTML = `
+                    <div class="flex flex-col items-start">
+                        <span class="font-medium text-gray-800">${event.name}</span>
+                        <span class="text-xs text-gray-500">${new Date(event.date).toLocaleDateString('id-ID')}</span>
+                        ${event.description ? `<span class="text-xs text-gray-500 italic">${event.description}</span>` : ''}
+                    </div>
+                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="deleteEvent('${event.id}')">Hapus</button>
+                `;
+                eventListDiv.appendChild(eventItem);
+            });
+        }
+
+        async function deleteEvent(eventId) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            try {
+                await deleteDoc(doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/events`, eventId));
+            } catch (e) {
+                console.error("Error deleting event: ", e);
+                showModal('Gagal menghapus event. Silakan coba lagi.');
+            }
+        }
+
+        // --- Habits Feature Logic ---
+        function renderHabitsTable() {
+            habitsTableBody.innerHTML = ''; // Clear previous entries
+            if (habits.length === 0) {
+                habitsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Belum ada kebiasaan.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+            habits.forEach((habit) => {
+                const row = document.createElement('tr');
+                const isCompletedToday = habit.completedDates && habit.completedDates[today];
+                const completionCount = habit.completedDates ? Object.keys(habit.completedDates).length : 0;
+                const progressPercentage = habits.length > 0 ? Math.round((completionCount / habits.length) * 100) : 0; // Simple progress based on total habits
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${habit.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${progressPercentage}%;"></div>
+                        </div>
+                        <span class="text-xs text-gray-600">${progressPercentage}%</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" ${isCompletedToday ? 'checked' : ''} onclick="toggleHabitCompletion('${habit.id}', event.target.checked)">
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                        <button class="text-red-600 hover:text-red-900" onclick="deleteHabit('${habit.id}')">Hapus</button>
+                    </td>
+                `;
+                habitsTableBody.appendChild(row);
+            });
+        }
+
+        addHabitBtn.addEventListener('click', async () => {
+            const name = habitNameInput.value.trim();
+            if (!name) {
+                showModal('Mohon masukkan nama kebiasaan.');
+                return;
+            }
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/habits`), {
+                    name: name,
+                    completedDates: {} // Store completion dates as a map
+                });
+                habitNameInput.value = '';
+            } catch (e) {
+                console.error("Error adding habit: ", e);
+                showModal('Gagal menambahkan kebiasaan. Silakan coba lagi.');
+            }
+        });
+
+        async function toggleHabitCompletion(habitId, isChecked) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            const habitRef = doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/habits`, habitId);
+            const habitToUpdate = habits.find(h => h.id === habitId);
+
+            if (habitToUpdate) {
+                const updatedCompletedDates = { ...habitToUpdate.completedDates };
+                if (isChecked) {
+                    updatedCompletedDates[today] = true;
+                } else {
+                    delete updatedCompletedDates[today];
+                }
+
+                try {
+                    await updateDoc(habitRef, {
+                        completedDates: updatedCompletedDates
+                    });
+                } catch (e) {
+                    console.error("Error updating habit completion: ", e);
+                    showModal('Gagal memperbarui status kebiasaan. Silakan coba lagi.');
+                }
+            }
+        }
+
+        async function deleteHabit(habitId) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            try {
+                await deleteDoc(doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/habits`, habitId));
+            } catch (e) {
+                console.error("Error deleting habit: ", e);
+                showModal('Gagal menghapus kebiasaan. Silakan coba lagi.');
+            }
+        }
+
+        // --- Pic Drop Feature Logic (Simulated Upload) ---
+        selectPhotoBtn.addEventListener('click', () => {
+            photoUploadInput.click(); // Trigger the hidden file input
+        });
+
+        photoUploadInput.addEventListener('change', () => {
+            if (photoUploadInput.files.length > 0) {
+                uploadPhotoBtn.classList.remove('hidden');
+            } else {
+                uploadPhotoBtn.classList.add('hidden');
+            }
+        });
+
+        uploadPhotoBtn.addEventListener('click', () => {
+            const file = photoUploadInput.files[0];
+            const caption = photoCaptionInput.value.trim();
+
+            if (!file) {
+                showModal('Mohon pilih foto untuk diunggah.');
+                return;
+            }
+
+            // Simulate upload: In a real app, you'd upload this to Firebase Storage
+            // For this demo, we'll just use a placeholder image and the caption
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const simulatedImageUrl = e.target.result; // This is a Data URL (base64)
+                uploadedPhotos.push({
+                    src: simulatedImageUrl, // Using base64 for demo purposes
+                    caption: caption || 'Tanpa Keterangan',
+                    date: new Date().toISOString()
+                });
+                renderPhotoGallery();
+                photoCaptionInput.value = '';
+                photoUploadInput.value = ''; // Clear the file input
+                uploadPhotoBtn.classList.add('hidden');
+                showModal('Foto berhasil diunggah (simulasi)!');
+            };
+            reader.readAsDataURL(file); // Read file as Data URL
+        });
+
+        function renderPhotoGallery() {
+            photoGalleryDiv.innerHTML = ''; // Clear previous entries
+            if (uploadedPhotos.length === 0) {
+                photoGalleryDiv.innerHTML = '<p class="col-span-full text-gray-500 text-center">Belum ada foto.</p>';
+                return;
+            }
+
+            // Sort photos by date descending
+            const sortedPhotos = [...uploadedPhotos].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedPhotos.forEach((photo, index) => {
+                const photoItem = document.createElement('div');
+                photoItem.classList.add('relative', 'group', 'rounded-lg', 'overflow-hidden', 'shadow-md');
+                photoItem.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.caption}" class="w-full h-32 object-cover rounded-lg">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                        <p class="text-white text-sm text-center px-2">${photo.caption}</p>
+                        <button class="absolute top-2 right-2 text-white text-xl hover:text-red-400" onclick="deletePhoto(${index})">&times;</button>
+                    </div>
+                `;
+                photoGalleryDiv.appendChild(photoItem);
+            });
+        }
+
+        function deletePhoto(index) {
+            uploadedPhotos.splice(index, 1);
+            renderPhotoGallery();
+            showModal('Foto berhasil dihapus.');
+        }
+
+        // --- Wishlist Feature Logic ---
+        function renderWishlistItems() {
+            wishlistItemsListDiv.innerHTML = ''; // Clear previous entries
+            if (wishlistItems.length === 0) {
+                wishlistItemsListDiv.innerHTML = '<p class="text-gray-500">Belum ada item di daftar keinginan.</p>';
+                return;
+            }
+
+            wishlistItems.forEach((item) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-200');
+                const priceText = item.price ? ` (${formatCurrency(item.price)})` : '';
+                const fulfilledClass = item.fulfilled ? 'line-through text-gray-500' : '';
+
+                itemDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-purple-600 mr-2" ${item.fulfilled ? 'checked' : ''} onclick="toggleWishlistItemFulfilled('${item.id}', event.target.checked)">
+                        <span class="font-medium text-gray-800 ${fulfilledClass}">${item.name}${priceText}</span>
+                    </div>
+                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="deleteWishlistItem('${item.id}')">Hapus</button>
+                `;
+                wishlistItemsListDiv.appendChild(itemDiv);
+            });
+        }
+
+        addWishlistItemBtn.addEventListener('click', async () => {
+            const name = wishlistItemNameInput.value.trim();
+            const price = parseFloat(wishlistItemPriceInput.value) || 0;
+
+            if (!name) {
+                showModal('Mohon masukkan nama item.');
+                return;
+            }
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/wishlist`), {
+                    name: name,
+                    price: price,
+                    fulfilled: false,
+                    createdAt: new Date().toISOString()
+                });
+                wishlistItemNameInput.value = '';
+                wishlistItemPriceInput.value = '';
+            } catch (e) {
+                console.error("Error adding wishlist item: ", e);
+                showModal('Gagal menambahkan item ke daftar keinginan. Silakan coba lagi.');
+            }
+        });
+
+        async function toggleWishlistItemFulfilled(itemId, isChecked) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            const itemRef = doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/wishlist`, itemId);
+            try {
+                await updateDoc(itemRef, {
+                    fulfilled: isChecked
+                });
+            } catch (e) {
+                console.error("Error updating wishlist item: ", e);
+                showModal('Gagal memperbarui status item. Silakan coba lagi.');
+            }
+        }
+
+        async function deleteWishlistItem(itemId) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            try {
+                await deleteDoc(doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/wishlist`, itemId));
+            } catch (e) {
+                console.error("Error deleting wishlist item: ", e);
+                showModal('Gagal menghapus item dari daftar keinginan. Silakan coba lagi.');
+            }
+        }
+
+        // --- Dashboard Update Functions ---
+        function updateDashboardFinance() {
+            dashboardIncomeSpan.textContent = formatCurrency(totalIncome);
+            dashboardExpenseSpan.textContent = formatCurrency(totalExpense);
+            const balance = totalIncome - totalExpense;
+            dashboardBalanceSpan.textContent = formatCurrency(balance);
+            if (balance < 0) {
+                dashboardBalanceSpan.classList.remove('text-indigo-700');
+                dashboardBalanceSpan.classList.add('text-red-700');
+            } else {
+                dashboardBalanceSpan.classList.remove('text-red-700');
+                dashboardBalanceSpan.classList.add('text-indigo-700');
+            }
+        }
+
+        function updateDashboardSavings() {
+            const activeGoals = savingGoals.length;
+            const totalTarget = savingGoals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+            dashboardSavingGoalsSpan.textContent = activeGoals;
+            dashboardTotalSavingTargetSpan.textContent = formatCurrency(totalTarget);
+        }
+
+        function updateDashboardHabits() {
+            const activeHabits = habits.length;
+            const today = new Date().toISOString().split('T')[0];
+            const completedToday = habits.filter(h => h.completedDates && h.completedDates[today]).length;
+            dashboardActiveHabitsSpan.textContent = activeHabits;
+            dashboardCompletedHabitsSpan.textContent = completedToday;
+        }
+
+        function updateDashboardWishlist() {
+            const activeItems = wishlistItems.length;
+            const fulfilledItems = wishlistItems.filter(item => item.fulfilled).length;
+            dashboardActiveWishlistSpan.textContent = activeItems;
+            dashboardFulfilledWishlistSpan.textContent = fulfilledItems;
+        }
+
+        // Initial content load: show home page and default to Dasbor content
+        window.addEventListener('load', () => {
+            showPage('home-page'); // Ensure home page is visible initially
+            // Set initial Monitor Event content (static)
+            updateMonitorEventContent('Monitor Event', 'Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.');
+            // Financial, Saving Goals, Habits, Wishlist data will be loaded via Firestore listeners
+            // Dashboard will update once data is loaded through listeners
+        });
+
+        // Event Listeners for Footer Navigation (now navigate to specific pages)
+        document.getElementById('dasbor-nav').addEventListener('click', () => {
+            showPage('dasbor-page');
+        });
+        document.getElementById('kalender-nav').addEventListener('click', () => {
+            showPage('kalender-page');
+        });
+        document.getElementById('habits-nav').addEventListener('click', () => {
+            showPage('habits-page');
+        });
+        document.getElementById('picdrop-nav').addEventListener('click', () => {
+            showPage('picdrop-page');
+        });
+        document.getElementById('wishlist-nav').addEventListener('click', () => {
+            showPage('wishlist-page');
+        });
+
     </script>
 </body>
 </html>
