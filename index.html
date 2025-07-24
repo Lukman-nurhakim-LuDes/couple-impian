@@ -156,7 +156,7 @@
     <header class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-between items-center mb-8">
         <!-- Icon Aku -->
         <div class="flex items-center">
-            <img src="icons/Aku.png" alt="Aku Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Aku';">
+            <img src="icons/aku.png" alt="Aku Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Aku';">
         </div>
         
         <div class="text-center">
@@ -166,7 +166,7 @@
         
         <!-- Icon Kamu -->
         <div class="flex items-center">
-            <img src="icons/Kamu.png" alt="Kamu Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kamu';">
+            <img src="icons/kamu.png" alt="Kamu Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kamu';">
         </div>
     </header>
 
@@ -493,7 +493,7 @@
         <!-- Kalender Card -->
         <div id="kalender-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/Calendar.png" alt="Kalender Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
+                <img src="icons/Kalender.png" alt="Kalender Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Kalender</p>
         </div>
@@ -507,7 +507,7 @@
         <!-- Pic Drop Card -->
         <div id="picdrop-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
             <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/pic-dropping.png" alt="Pic Drop Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
+                <img src="icons/pic drop.png" alt="Pic Drop Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Pic Drop</p>
         </div>
@@ -567,6 +567,113 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Get main page elements
+        const homePage = document.getElementById('home-page');
+        const mainFooter = document.getElementById('main-footer'); // Get the footer element
+
+        // Get feature pages
+        const keuanganPage = document.getElementById('keuangan-page');
+        const tabunganPage = document.getElementById('tabungan-page'); // Fixed typo
+        const gamePage = document.getElementById('game-page');
+        const pasanganPage = document.getElementById('pasangan-page');
+        const dasborPage = document.getElementById('dasbor-page');
+        const kalenderPage = document.getElementById('kalender-page');
+        const habitsPage = document.getElementById('habits-page');
+        const picdropPage = document.getElementById('picdrop-page');
+        const wishlistPage = document.getElementById('wishlist-page');
+
+
+        // Get feature cards (top section)
+        const keuanganCard = document.getElementById('keuangan-card');
+        const tabunganCard = document.getElementById('tabungan-card');
+        const gameCard = document.getElementById('game-card');
+        const pasanganCard = document.getElementById('pasangan-card');
+
+        // Get Monitor Event elements (static on home page)
+        const monitorEventTitle = document.getElementById('monitor-event-title');
+        const monitorEventContent = document.getElementById('monitor-event-content');
+
+        // Get footer navigation items
+        const footerNavItems = document.querySelectorAll('.footer-nav-item');
+
+        // Get modal elements
+        const customModal = document.getElementById('custom-modal');
+        const modalMessage = document.getElementById('modal-message');
+
+        // Get Keuangan page elements
+        const incomeAmountInput = document.getElementById('income-amount');
+        const incomeDescInput = document.getElementById('income-desc');
+        const addIncomeBtn = document.getElementById('add-income-btn');
+        const expenseAmountInput = document.getElementById('expense-amount');
+        const expenseDescInput = document.getElementById('expense-desc');
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        const totalIncomeSpan = document.getElementById('total-income');
+        const totalExpenseSpan = document.getElementById('total-expense');
+        const netBalanceSpan = document.getElementById('net-balance');
+        const transactionHistoryDiv = document.getElementById('transaction-history');
+
+        let totalIncome = 0;
+        let totalExpense = 0;
+        let transactions = []; // This will now be populated by Firestore listener
+
+        // Get Tabungan page elements
+        const savingGoalNameInput = document.getElementById('saving-goal-name');
+        const savingGoalAmountInput = document.getElementById('saving-goal-amount');
+        const addSavingGoalBtn = document.getElementById('add-saving-goal-btn');
+        const savingGoalsListDiv = document.getElementById('saving-goals-list');
+
+        let savingGoals = []; // This will now be populated by Firestore listener
+
+        // Get Kalender page elements
+        const currentMonthYearSpan = document.getElementById('current-month-year');
+        const prevMonthBtn = document.getElementById('prev-month-btn');
+        const nextMonthBtn = document.getElementById('next-month-btn');
+        const calendarGrid = document.getElementById('calendar-grid');
+        const eventDateInput = document.getElementById('event-date');
+        const eventNameInput = document.getElementById('event-name');
+        const eventDescriptionInput = document.getElementById('event-description'); // Fixed typo
+        const addEventBtn = document.getElementById('add-event-btn');
+        const eventListDiv = document.getElementById('event-list');
+
+        let currentCalendarDate = new Date();
+        let events = []; // This will be populated by Firestore listener
+
+        // Get Habits page elements
+        const habitNameInput = document.getElementById('habit-name');
+        const addHabitBtn = document.getElementById('add-habit-btn'); // Fixed typo
+        const habitsTableBody = document.getElementById('habits-table-body');
+
+        let habits = []; // This will be populated by Firestore listener
+
+        // Get Pic Drop page elements
+        const photoCaptionInput = document.getElementById('photo-caption');
+        const photoUploadInput = document.getElementById('photo-upload-input');
+        const selectPhotoBtn = document.getElementById('select-photo-btn');
+        const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+        const photoGalleryDiv = document.getElementById('photo-gallery');
+
+        let uploadedPhotos = []; // This will store simulated photo data
+
+        // Get Wishlist page elements
+        const wishlistItemNameInput = document.getElementById('wishlist-item-name');
+        const wishlistItemPriceInput = document.getElementById('wishlist-item-price');
+        const addWishlistItemBtn = document.getElementById('add-wishlist-item-btn');
+        const wishlistItemsListDiv = document.getElementById('wishlist-items-list');
+
+        let wishlistItems = []; // This will be populated by Firestore listener
+
+        // Get Dashboard elements
+        const dashboardIncomeSpan = document.getElementById('dashboard-income');
+        const dashboardExpenseSpan = document.getElementById('dashboard-expense');
+        const dashboardBalanceSpan = document.getElementById('dashboard-balance');
+        const dashboardSavingGoalsSpan = document.getElementById('dashboard-saving-goals');
+        const dashboardTotalSavingTargetSpan = document.getElementById('dashboard-total-saving-target');
+        const dashboardActiveHabitsSpan = document.getElementById('dashboard-active-habits');
+        const dashboardCompletedHabitsSpan = document.getElementById('dashboard-completed-habits');
+        const dashboardActiveWishlistSpan = document.getElementById('dashboard-active-wishlist');
+        const dashboardFulfilledWishlistSpan = document.getElementById('dashboard-fulfilled-wishlist');
+
 
         // Initialize Firebase and set up authentication
         window.addEventListener('DOMContentLoaded', async () => {
@@ -695,113 +802,6 @@
                 showModal('Gagal memuat daftar keinginan. Silakan coba lagi.');
             });
         }
-
-
-        // Get main page elements
-        const homePage = document.getElementById('home-page');
-        const mainFooter = document.getElementById('main-footer'); // Get the footer element
-
-        // Get feature pages
-        const keuanganPage = document.getElementById('keuangan-page');
-        const tabunganPage = document.getElementById('tabungan-page');
-        const gamePage = document.getElementById('game-page');
-        const pasanganPage = document.getElementById('pasangan-page');
-        const dasborPage = document.getElementById('dasbor-page');
-        const kalenderPage = document.getElementById('kalender-page');
-        const habitsPage = document.getElementById('habits-page');
-        const picdropPage = document.getElementById('picdrop-page');
-        const wishlistPage = document.getElementById('wishlist-page');
-
-
-        // Get feature cards (top section)
-        const keuanganCard = document.getElementById('keuangan-card');
-        const tabunganCard = document.getElementById('tabungan-card');
-        const gameCard = document.getElementById('game-card');
-        const pasanganCard = document.getElementById('pasangan-card');
-
-        // Get Monitor Event elements (static on home page)
-        const monitorEventTitle = document.getElementById('monitor-event-title');
-        const monitorEventContent = document.getElementById('monitor-event-content');
-
-        // Get footer navigation items
-        const footerNavItems = document.querySelectorAll('.footer-nav-item');
-
-        // Get modal elements
-        const customModal = document.getElementById('custom-modal');
-        const modalMessage = document.getElementById('modal-message');
-
-        // Get Keuangan page elements
-        const incomeAmountInput = document.getElementById('income-amount');
-        const incomeDescInput = document.getElementById('income-desc');
-        const addIncomeBtn = document.getElementById('add-income-btn');
-        const expenseAmountInput = document.getElementById('expense-amount');
-        const expenseDescInput = document.getElementById('expense-desc');
-        const addExpenseBtn = document.getElementById('add-expense-btn');
-        const totalIncomeSpan = document.getElementById('total-income');
-        const totalExpenseSpan = document.getElementById('total-expense');
-        const netBalanceSpan = document.getElementById('net-balance');
-        const transactionHistoryDiv = document.getElementById('transaction-history');
-
-        let totalIncome = 0;
-        let totalExpense = 0;
-        let transactions = []; // This will now be populated by Firestore listener
-
-        // Get Tabungan page elements
-        const savingGoalNameInput = document.getElementById('saving-goal-name');
-        const savingGoalAmountInput = document.getElementById('saving-goal-amount');
-        const addSavingGoalBtn = document.getElementById('add-saving-goal-btn');
-        const savingGoalsListDiv = document.getElementById('saving-goals-list');
-
-        let savingGoals = []; // This will now be populated by Firestore listener
-
-        // Get Kalender page elements
-        const currentMonthYearSpan = document.getElementById('current-month-year');
-        const prevMonthBtn = document.getElementById('prev-month-btn');
-        const nextMonthBtn = document.getElementById('next-month-btn');
-        const calendarGrid = document.getElementById('calendar-grid');
-        const eventDateInput = document.getElementById('event-date');
-        const eventNameInput = document.getElementById('event-name');
-        const eventDescriptionInput = document.getElementById('event-description');
-        const addEventBtn = document.getElementById('add-event-btn');
-        const eventListDiv = document.getElementById('event-list');
-
-        let currentCalendarDate = new Date();
-        let events = []; // This will be populated by Firestore listener
-
-        // Get Habits page elements
-        const habitNameInput = document.getElementById('habit-name');
-        const addHabitBtn = document.getElementById('add-habit-btn');
-        const habitsTableBody = document.getElementById('habits-table-body');
-
-        let habits = []; // This will be populated by Firestore listener
-
-        // Get Pic Drop page elements
-        const photoCaptionInput = document.getElementById('photo-caption');
-        const photoUploadInput = document.getElementById('photo-upload-input');
-        const selectPhotoBtn = document.getElementById('select-photo-btn');
-        const uploadPhotoBtn = document.getElementById('upload-photo-btn');
-        const photoGalleryDiv = document.getElementById('photo-gallery');
-
-        let uploadedPhotos = []; // This will store simulated photo data
-
-        // Get Wishlist page elements
-        const wishlistItemNameInput = document.getElementById('wishlist-item-name');
-        const wishlistItemPriceInput = document.getElementById('wishlist-item-price');
-        const addWishlistItemBtn = document.getElementById('add-wishlist-item-btn');
-        const wishlistItemsListDiv = document.getElementById('wishlist-items-list');
-
-        let wishlistItems = []; // This will be populated by Firestore listener
-
-        // Get Dashboard elements
-        const dashboardIncomeSpan = document.getElementById('dashboard-income');
-        const dashboardExpenseSpan = document.getElementById('dashboard-expense');
-        const dashboardBalanceSpan = document.getElementById('dashboard-balance');
-        const dashboardSavingGoalsSpan = document.getElementById('dashboard-saving-goals');
-        const dashboardTotalSavingTargetSpan = document.getElementById('dashboard-total-saving-target');
-        const dashboardActiveHabitsSpan = document.getElementById('dashboard-active-habits');
-        const dashboardCompletedHabitsSpan = document.getElementById('dashboard-completed-habits');
-        const dashboardActiveWishlistSpan = document.getElementById('dashboard-active-wishlist');
-        const dashboardFulfilledWishlistSpan = document.getElementById('dashboard-fulfilled-wishlist');
 
 
         // Function to show custom modal (for general messages/errors)
