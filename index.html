@@ -3,88 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Couple GrowUp</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#667EEA"> <!-- Warna tema untuk browser -->
-    <link rel="apple-touch-icon" href="https://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-778d07d5-a99c-4db2-b91c-87e7ecc9d4bb"> <!-- Icon untuk iOS -->
-    <link rel="icon" type="image/png" href="https://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-778d07d5-a99c-4db2-b91c-87e7ecc9d4bb">
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <title>Couple GrowUp - Petualangan Menuju Impian</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="/manifest.json">
     <style>
-        body { margin: 0; font-family: 'Inter', sans-serif; }
-        #root { display: flex; justify-content: center; align-items: center; min-height: 100vh; width: 100%; }
-        .feature-button {
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.25rem; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-placeholder {
+            width: 4rem; /* 64px */
+            height: 4rem; /* 64px */
+            background-color: #d1d5db; /* Gray placeholder */
+            border-radius: 0.75rem; /* Rounded corners */
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 12px;
-            margin: 8px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease-in-out;
-            transform: scale(1);
-            cursor: pointer;
-        }
-        .feature-button:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: scale(1.05);
-        }
-        .feature-button-large {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            margin: 8px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease-in-out;
-            transform: scale(1);
-            cursor: pointer;
-        }
-        .feature-button-large:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: scale(1.05);
-        }
-        .icon-small {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-        }
-        .icon-large {
-            width: 96px;
-            height: 96px;
-            object-fit: contain;
-        }
-        .icon-header {
-            width: 60px; /* Ukuran ikon di header */
-            height: 60px;
-            object-fit: contain;
+            color: #4b5563;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem;
         }
     </style>
 </head>
-<body>
-    <noscript>Anda perlu mengaktifkan JavaScript untuk menjalankan aplikasi ini.</noscript>
-    <div id="root"></div>
+<body class="flex flex-col items-center min-h-screen p-4 sm:p-6 lg:p-8">
 
-    <!-- Script untuk React App -->
-    <script type="module" src="/app.js"></script>
+    <!-- Header Section -->
+    <header class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-between items-center mb-8">
+        <div class="text-gray-700 font-semibold text-lg sm:text-xl">Aku</div>
+        <div class="text-center">
+            <h1 class="text-2xl sm:text-3xl font-bold text-indigo-700">Couple GrowUp</h1>
+            <p class="text-sm sm:text-base text-gray-600 mt-1">Petualangan Menuju Impian</p>
+        </div>
+        <div class="text-gray-700 font-semibold text-lg sm:text-xl">Kamu</div>
+    </header>
 
-    <!-- Registrasi Service Worker -->
+    <!-- Main Content Area -->
+    <main class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+        <!-- Left Column - Menu Items -->
+        <div class="flex flex-col space-y-6">
+            <!-- Keuangan Card -->
+            <div class="card p-4 flex flex-col items-center text-center">
+                <div class="icon-placeholder mb-3">
+                    <!-- Placeholder for Keuangan Icon -->
+                    <img src="assets/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
+                </div>
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Keuangan</h2>
+            </div>
+            <!-- Tabungan Card -->
+            <div class="card p-4 flex flex-col items-center text-center">
+                <div class="icon-placeholder mb-3">
+                    <!-- Placeholder for Tabungan Icon -->
+                    <img src="assets/tabungan.png" alt="Tabungan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
+                </div>
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Tabungan</h2>
+            </div>
+        </div>
+
+        <!-- Center Column - Monitor Event -->
+        <div class="card p-6 sm:p-8 flex flex-col items-center justify-center text-center col-span-1 md:col-span-1">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Monitor Event</h2>
+            <p class="text-base sm:text-lg text-gray-600">Lihat semua aktivitas ataupun event yang dibuat di sini.</p>
+            <!-- You can add more content here for the event monitor -->
+        </div>
+
+        <!-- Right Column - Menu Items -->
+        <div class="flex flex-col space-y-6">
+            <!-- Game Card -->
+            <div class="card p-4 flex flex-col items-center text-center">
+                <div class="icon-placeholder mb-3">
+                    <!-- Placeholder for Game Icon -->
+                    <img src="assets/game.png" alt="Game Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
+                </div>
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Game</h2>
+            </div>
+            <!-- Pasangan Card -->
+            <div class="card p-4 flex flex-col items-center text-center">
+                <div class="icon-placeholder mb-3">
+                    <!-- Placeholder for Pasangan Icon -->
+                    <img src="assets/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
+                </div>
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Pasangan</h2>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Navigation -->
+    <footer class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-around items-center">
+        <!-- Dasbor Card -->
+        <div class="flex flex-col items-center text-center">
+            <div class="icon-placeholder mb-1 w-12 h-12">
+                <!-- Placeholder for Dasbor Icon -->
+                <img src="icons/dasbor.png" alt="Dasbor Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Dasbor';">
+            </div>
+            <p class="text-xs sm:text-sm text-gray-700">Dasbor</p>
+        </div>
+        <!-- Kalender Card -->
+        <div class="flex flex-col items-center text-center">
+            <div class="icon-placeholder mb-1 w-12 h-12">
+                <!-- Placeholder for Kalender Icon -->
+                <img src="icons/kalender.png" alt="Kalender Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
+            </div>
+            <p class="text-xs sm:text-sm text-gray-700">Kalender</p>
+        </div>
+        <!-- Habits Card -->
+        <div class="flex flex-col items-center text-center">
+            <div class="icon-placeholder mb-1 w-12 h-12">
+                <!-- Placeholder for Habits Icon -->
+                <img src="icons/habits.png" alt="Habits Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Habits';">
+            </div>
+            <p class="text-xs sm:text-sm text-gray-700">Habits</p>
+        </div>
+        <!-- Pic Drop Card -->
+        <div class="flex flex-col items-center text-center">
+            <div class="icon-placeholder mb-1 w-12 h-12">
+                <!-- Placeholder for Pic Drop Icon -->
+                <img src="icons/picdrop.png" alt="Pic Drop Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
+            </div>
+            <p class="text-xs sm:text-sm text-gray-700">Pic Drop</p>
+        </div>
+        <!-- Wishlist Card -->
+        <div class="flex flex-col items-center text-center">
+            <div class="icon-placeholder mb-1 w-12 h-12">
+                <!-- Placeholder for Wishlist Icon -->
+                <img src="icons/wishlist.png" alt="Wishlist Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Wishlist';">
+            </div>
+            <p class="text-xs sm:text-sm text-gray-700">Wishlist</p>
+        </div>
+    </footer>
+
+    <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
-                        console.log('Service Worker terdaftar dengan sukses:', registration);
+                        console.log('Service Worker registered with scope:', registration.scope);
                     })
                     .catch(error => {
-                        console.error('Gagal mendaftar Service Worker:', error);
+                        console.error('Service Worker registration failed:', error);
                     });
             });
         }
