@@ -322,7 +322,7 @@
             <div class="bg-green-100 p-4 rounded-lg shadow text-left">
                 <h3 class="font-semibold text-green-800 text-lg mb-2">Progres Tabungan</h3>
                 <p class="text-gray-700">Tujuan Aktif: <span id="dashboard-saving-goals" class="font-bold">0</span></p>
-                <p class="text-gray-700">Total Target: <span id="dashboard-total-saving-target" class="font-bold">Rp 0</span></p>
+                <p class="text-700">Total Target: <span id="dashboard-total-saving-target" class="font-bold">Rp 0</span></p>
             </div>
             <div class="bg-purple-100 p-4 rounded-lg shadow text-left">
                 <h3 class="font-semibold text-purple-800 text-lg mb-2">Progres Kebiasaan</h3>
@@ -532,6 +532,8 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
+                // Log the path being registered for debugging
+                console.log('Attempting to register Service Worker from:', '/service-worker.js');
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
                         console.log('Service Worker registered with scope:', registration.scope);
@@ -541,7 +543,10 @@
                     });
             });
         }
-
+    </script>
+    
+    <!-- Main application logic with Firebase imports -->
+    <script type="module">
         // Firebase Configuration (from your input)
         const firebaseConfig = {
             apiKey: "AIzaSyBJvImC_0c11FAXRmDRLkEAMGC1tXdj5ns",
@@ -572,9 +577,19 @@
 
                 // Authenticate user
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Signed in with custom token.");
+                    } catch (customTokenError) {
+                        console.warn("Custom token sign-in failed, falling back to anonymous:", customTokenError);
+                        // If custom token fails, try anonymous sign-in
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously after custom token failure.");
+                    }
                 } else {
+                    // If no custom token is provided, sign in anonymously
                     await signInAnonymously(auth);
+                    console.log("Signed in anonymously (no custom token provided).");
                 }
 
                 // Listen for auth state changes to get userId and initialize Firestore listeners
