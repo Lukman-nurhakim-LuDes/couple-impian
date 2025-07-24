@@ -907,6 +907,7 @@
                         <span class="font-medium text-gray-800">${t.description}</span>
                         <span class="text-xs text-gray-500">${new Date(t.date).toLocaleDateString('id-ID')}</span>
                     </div>
+                    <button class="text-red-500 hover:text-red-700 text-sm" onclick="deleteTransaction('${t.id}')">Hapus</button>
                     <span class="font-semibold ${amountClass}">${sign} ${formatCurrency(t.amount)}</span>
                 `;
                 transactionHistoryDiv.appendChild(transactionItem);
@@ -968,6 +969,18 @@
                 showModal('Gagal menambahkan pengeluaran. Silakan coba lagi.');
             }
         });
+        async function deleteTransaction(transactionId) {
+            if (!isAuthReady || !userId) {
+                showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+                return;
+            }
+            try {
+                await deleteDoc(doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/transactions`, transactionId));
+            } catch (e) {
+                console.error("Error deleting transaction: ", e);
+                showModal('Gagal menghapus transaksi. Silakan coba lagi.');
+            }
+        }
 
         // --- Tabungan Feature Logic ---
         function renderSavingGoals() {
@@ -1074,7 +1087,13 @@
                 }
 
                 dateDiv.addEventListener('click', () => {
-                    showModal(`Event pada ${fullDate.toLocaleDateString('id-ID')}: ${events.filter(e => e.date === formattedDate).map(e => e.name).join(', ') || 'Tidak ada event.'}`);
+                    const eventsOnThisDate = events.filter(e => e.date === formattedDate);
+                    if (eventsOnThisDate.length > 0) {
+                        const eventDetails = eventsOnThisDate.map(e => `${e.name}${e.description ? ` (${e.description})` : ''}`).join('\n');
+                        showModal(`Event pada ${fullDate.toLocaleDateString('id-ID')}:\n${eventDetails}`);
+                    } else {
+                        showModal(`Tidak ada event pada ${fullDate.toLocaleDateString('id-ID')}.`);
+                    }
                 });
 
                 calendarGrid.appendChild(dateDiv);
@@ -1177,8 +1196,11 @@
                 const row = document.createElement('tr');
                 const isCompletedToday = habit.completedDates && habit.completedDates[today];
                 const completionCount = habit.completedDates ? Object.keys(habit.completedDates).length : 0;
-                const progressPercentage = habits.length > 0 ? Math.round((completionCount / habits.length) * 100) : 0; // Simple progress based on total habits
-
+                // Calculate total days since habit creation for a more accurate percentage
+                const createdAtDate = new Date(habit.createdAt);
+                const daysSinceCreation = Math.floor((new Date() - createdAtDate) / (1000 * 60 * 60 * 24));
+                const progressPercentage = daysSinceCreation > 0 ? Math.round((completionCount / daysSinceCreation) * 100) : 0;
+                
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${habit.name}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -1212,7 +1234,8 @@
             try {
                 await addDoc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/habits`), {
                     name: name,
-                    completedDates: {} // Store completion dates as a map
+                    completedDates: {}, // Store completion dates as a map
+                    createdAt: new Date().toISOString() // Store creation date
                 });
                 habitNameInput.value = '';
             } catch (e) {
