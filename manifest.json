@@ -1,0 +1,21 @@
+{
+    "name": "Couple GrowUp",
+    "short_name": "GrowUp",
+    "description": "Petualangan Menuju Impian bersama Couple GrowUp",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f0f4f8",
+    "theme_color": "#667EEA",
+    "icons": [
+        {
+            "src": "http://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-778d07d5-a99c-4db2-b91c-87e7ecc9d4bb",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "http://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-512.jpg-5342d4fd-19a2-4d01-aa89-1b99e49eb33a",
+            "sizes": "512x512",
+            "type": "image/jpeg"
+        }
+    ]
+}
