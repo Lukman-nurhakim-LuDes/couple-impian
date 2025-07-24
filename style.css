@@ -1,0 +1,42 @@
+/* style.css */
+
+/* Anda dapat menambahkan gaya CSS kustom di sini */
+/* Contoh: */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Font family sudah diatur di app.js melalui Tailwind */
+    /* background-color: #f0f4f8; */ /* Latar belakang sudah diatur di app.js */
+}
+
+/* Gaya dasar untuk elemen HTML */
+h1, h2, h3, h4, h5, h6 {
+    color: #333;
+}
+
+p {
+    color: #555;
+    line-height: 1.6;
+}
+
+a {
+    color: #667EEA;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Contoh gaya untuk kelas kustom */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Gaya responsif dasar */
+@media (max-width: 768px) {
+    /* Aturan gaya untuk perangkat yang lebih kecil */
+}
