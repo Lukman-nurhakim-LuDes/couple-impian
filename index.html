@@ -6,11 +6,66 @@
     <title>Couple GrowUp</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#667EEA"> <!-- Warna tema untuk browser -->
-    <link rel="apple-touch-icon" href="http://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-2c9b4f55-50e6-4cde-a31c-e9250178e954"> <!-- Icon untuk iOS -->
-    <link rel="icon" type="image/png" href="http://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-2c9b4f55-50e6-4cde-a31c-e9250178e954">
+    <link rel="apple-touch-icon" href="https://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-778d07d5-a99c-4db2-b91c-87e7ecc9d4bb"> <!-- Icon untuk iOS -->
+    <link rel="icon" type="image/png" href="https://googleusercontent.com/file_content/0?contentFetchId=uploaded:icon-192.png-778d07d5-a99c-4db2-b91c-87e7ecc9d4bb">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
         body { margin: 0; font-family: 'Inter', sans-serif; }
-        #root { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #root { display: flex; justify-content: center; align-items: center; min-height: 100vh; width: 100%; }
+        .feature-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            margin: 8px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
+            cursor: pointer;
+        }
+        .feature-button:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: scale(1.05);
+        }
+        .feature-button-large {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            margin: 8px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
+            cursor: pointer;
+        }
+        .feature-button-large:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: scale(1.05);
+        }
+        .icon-small {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+        .icon-large {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+        }
+        .icon-header {
+            width: 60px; /* Ukuran ikon di header */
+            height: 60px;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
