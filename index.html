@@ -12,30 +12,48 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Light gray background */
+            background-color: #f0f2f5; /* Light gray fallback background */
+            background-image: url('icons/Background.jpg'); /* Custom background image */
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Fix the background image when scrolling */
         }
+        /* Menghilangkan latar belakang putih dan bayangan dari kartu */
         .card {
-            background-color: #ffffff;
-            border-radius: 1.25rem; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: transparent; /* Menghilangkan warna latar belakang */
+            box-shadow: none; /* Menghilangkan bayangan */
+            border-radius: 1.25rem; /* Rounded corners tetap */
             transition: transform 0.2s ease-in-out;
             cursor: pointer; /* Indicate clickable */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem; /* Sesuaikan padding agar konten tidak terlalu rapat */
         }
         .card:hover {
             transform: translateY(-5px);
+            /* Anda bisa menambahkan efek hover lain di sini, misalnya border atau sedikit bayangan */
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
         }
         .icon-placeholder {
             width: 4rem; /* 64px */
             height: 4rem; /* 64px */
-            background-color: #d1d5db; /* Gray placeholder */
-            border-radius: 0.75rem; /* Rounded corners */
+            background-color: transparent; /* Menghilangkan latar belakang abu-abu */
+            border-radius: 0.75rem; /* Rounded corners tetap */
             display: flex;
             align-items: center;
             justify-content: center;
             color: #4b5563;
             font-weight: 600;
             text-align: center;
-            padding: 0.5rem;
+            padding: 0; /* Menghilangkan padding internal */
+        }
+        .icon-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Pastikan gambar ikon terlihat penuh */
         }
         /* Styles for the custom modal */
         .modal-overlay {
@@ -153,7 +171,7 @@
 <body class="flex flex-col items-center min-h-screen p-4 sm:p-6 lg:p-8">
 
     <!-- Header Section -->
-    <header class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-between items-center mb-8">
+    <header class="w-full max-w-4xl bg-transparent p-4 sm:p-6 rounded-2xl shadow-none flex justify-between items-center mb-8">
         <!-- Icon Aku -->
         <div class="flex items-center">
             <img src="icons/aku.png" alt="Aku Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Aku';">
@@ -482,7 +500,7 @@
     </div>
 
     <!-- Footer Navigation -->
-    <footer id="main-footer" class="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-2xl shadow-md flex justify-around items-center">
+    <footer id="main-footer" class="w-full max-w-4xl bg-transparent p-4 sm:p-6 rounded-2xl shadow-none flex justify-around items-center">
         <!-- Dasbor Card -->
         <div id="dasbor-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer active">
             <div class="icon-placeholder mb-1 w-12 h-12">
