@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="/manifest.json">
+    <!-- Chart.js CDN for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             /* Menggunakan font 'Carton' dan sans-serif sebagai cadangan */
@@ -24,7 +26,7 @@
         /* Mengatur ukuran font untuk h1 dan h2 secara eksplisit menjadi 24px */
         /* Mengurangi ukuran font untuk h1 di header */
         h1 {
-            font-size: 20px !important; /* Mengurangi ukuran font untuk judul utama */
+            font-size: 40px !important; /* Memperbesar ukuran font untuk judul utama */
         }
         h2 {
             font-size: 24px !important; /* Menggunakan !important untuk menimpa Tailwind */
@@ -227,8 +229,8 @@
     <header class="w-full max-w-4xl bg-transparent p-3 sm:p-5 rounded-2xl shadow-none flex justify-between items-center mb-4">
         <!-- Icon Aku -->
         <div class="flex items-center">
-            <!-- Menggunakan jalur lokal untuk aku.png dan ukuran 60px -->
-            <img src="icons/aku.png" alt="Aku Icon" class="w-[60px] h-[60px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/60x60/d1d5db/4b5563?text=Aku';">
+            <!-- Menggunakan jalur lokal untuk aku.png dan ukuran 100px -->
+            <img src="icons/aku.png" alt="Aku Icon" class="w-[100px] h-[100px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/100x100/d1d5db/4b5563?text=Aku';">
         </div>
         
         <div class="text-center">
@@ -238,8 +240,8 @@
         
         <!-- Icon Kamu -->
         <div class="flex items-center">
-            <!-- Menggunakan jalur lokal untuk kamu.png dan ukuran 60px -->
-            <img src="icons/kamu.png" alt="Kamu Icon" class="w-[60px] h-[60px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/60x60/d1d5db/4b5563?text=Kamu';">
+            <!-- Menggunakan jalur lokal untuk kamu.png dan ukuran 100px -->
+            <img src="icons/kamu.png" alt="Kamu Icon" class="w-[100px] h-[100px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/100x100/d1d5db/4b5563?text=Kamu';">
         </div>
     </header>
 
@@ -253,10 +255,10 @@
     <main id="home-page" class="w-full max-w-4xl">
 
         <!-- Monitor Event (Central Board-like Card) -->
-        <div id="monitor-event-card" class="card w-full p-4 mt-4" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px;">
+        <div id="monitor-event-card" class="card w-full p-4 mt-8" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px;">
             <h2 class="font-bold text-gray-800 mb-1">Monitor Event</h2>
             <!-- Menghapus sub judul kedua dari Monitor Event -->
-            <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600">
+            <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600 mt-4"> <!-- Menambahkan margin-top untuk menggeser teks ke bawah -->
                 <!-- Konten akan diisi secara dinamis -->
             </div>
         </div>
@@ -442,16 +444,10 @@
 
         <h3 class="font-bold text-gray-800 mt-8 mb-4">Grafik Keuangan</h3>
         <div class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-center">
-            <p class="text-gray-600">Placeholder untuk Grafik Line Chart (Pemasukan vs Pengeluaran)</p>
-            <div class="w-full h-48 bg-gray-200 rounded-lg mt-4 flex items-center justify-center text-gray-500">
-                [Grafik Line Chart di sini]
-            </div>
+            <canvas id="financeLineChart"></canvas>
         </div>
         <div class="w-full max-w-md bg-gray-100 p-4 rounded-lg text-center mt-6">
-            <p class="text-gray-600">Placeholder untuk Donut/Pie Chart (Distribusi Pengeluaran)</p>
-            <div class="w-full h-48 bg-gray-200 rounded-lg mt-4 flex items-center justify-center text-gray-500">
-                [Grafik Donut/Pie Chart di sini]
-            </div>
+            <canvas id="expensePieChart"></canvas>
         </div>
 
         <button onclick="window.showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
@@ -684,11 +680,19 @@
         let unsubscribeCoupleRoom = null; // To store the unsubscribe function for couple room listener
         let unsubscribeEvents = null; // Unsubscribe for events listener
         let unsubscribeWishlist = null; // Unsubscribe for wishlist listener
+        let unsubscribeTransactions = null; // Unsubscribe for transactions listener
+        let unsubscribeSavingGoals = null; // Unsubscribe for saving goals listener
+        let unsubscribeHabits = null; // Unsubscribe for habits listener
+        let unsubscribeUserProfile = null; // Unsubscribe for user profile listener
+
+        // Chart.js instances
+        let financeLineChart = null;
+        let expensePieChart = null;
 
         // Firebase SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Get main page elements
         const homePage = document.getElementById('home-page');
@@ -853,19 +857,14 @@
                         logoutButton.classList.add('hidden'); // Hide logout button
                         console.log("User not authenticated.");
                         window.showPage('auth-page'); // Show login page if not authenticated
-                        // Unsubscribe from couple room listener if user logs out
-                        if (unsubscribeCoupleRoom) {
-                            unsubscribeCoupleRoom();
-                            unsubscribeCoupleRoom = null;
-                        }
-                        if (unsubscribeEvents) {
-                            unsubscribeEvents();
-                            unsubscribeEvents = null;
-                        }
-                        if (unsubscribeWishlist) {
-                            unsubscribeWishlist();
-                            unsubscribeWishlist = null;
-                        }
+                        // Unsubscribe from all listeners if user logs out
+                        if (unsubscribeCoupleRoom) { unsubscribeCoupleRoom(); unsubscribeCoupleRoom = null; }
+                        if (unsubscribeEvents) { unsubscribeEvents(); unsubscribeEvents = null; }
+                        if (unsubscribeWishlist) { unsubscribeWishlist(); unsubscribeWishlist = null; }
+                        if (unsubscribeTransactions) { unsubscribeTransactions(); unsubscribeTransactions = null; }
+                        if (unsubscribeSavingGoals) { unsubscribeSavingGoals(); unsubscribeSavingGoals = null; }
+                        if (unsubscribeHabits) { unsubscribeHabits(); unsubscribeHabits = null; }
+                        if (unsubscribeUserProfile) { unsubscribeUserProfile(); unsubscribeUserProfile = null; }
                     }
                 });
 
@@ -902,9 +901,26 @@
 
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
+            // Determine which collection to listen to based on couple room status
+            const getCollectionPath = (baseCollection) => {
+                // If in a couple room, use the public shared collection
+                if (currentCoupleRoomId) {
+                    return `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/${baseCollection}`;
+                }
+                // Otherwise, use the user's private collection
+                return `artifacts/${appId}/users/${userId}/${baseCollection}`;
+            };
+
+            // Unsubscribe existing listeners before setting up new ones (important for room changes)
+            if (unsubscribeTransactions) { unsubscribeTransactions(); }
+            if (unsubscribeSavingGoals) { unsubscribeSavingGoals(); }
+            if (unsubscribeEvents) { unsubscribeEvents(); }
+            if (unsubscribeHabits) { unsubscribeHabits(); }
+            if (unsubscribeWishlist) { unsubscribeWishlist(); }
+            if (unsubscribeUserProfile) { unsubscribeUserProfile(); } // Unsubscribe from old user profile listener
+
             // Firestore listener for Transactions (Keuangan)
-            const transactionsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/transactions`);
-            onSnapshot(query(transactionsCollectionRef), (snapshot) => {
+            unsubscribeTransactions = onSnapshot(query(collection(db, getCollectionPath('transactions'))), (snapshot) => {
                 transactions = [];
                 snapshot.forEach(doc => {
                     transactions.push({ id: doc.id, ...doc.data() });
@@ -912,14 +928,14 @@
                 updateFinancialSummary();
                 renderTransactionHistory();
                 updateDashboardFinance(); // Update dashboard
+                updateFinanceCharts(); // Update charts
             }, (error) => {
                 console.error("Error fetching transactions:", error);
                 window.showModal('Gagal memuat data transaksi. Silakan coba lagi.');
             });
 
             // Firestore listener for Saving Goals (Tabungan)
-            const savingGoalsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/savingGoals`);
-            onSnapshot(query(savingGoalsCollectionRef), (snapshot) => {
+            unsubscribeSavingGoals = onSnapshot(query(collection(db, getCollectionPath('savingGoals'))), (snapshot) => {
                 savingGoals = [];
                 snapshot.forEach(doc => {
                     savingGoals.push({ id: doc.id, ...doc.data() });
@@ -932,8 +948,7 @@
             });
 
             // Firestore listener for Events (Kalender)
-            const eventsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/events`);
-            unsubscribeEvents = onSnapshot(query(eventsCollectionRef), (snapshot) => {
+            unsubscribeEvents = onSnapshot(query(collection(db, getCollectionPath('events'))), (snapshot) => {
                 events = [];
                 snapshot.forEach(doc => {
                     events.push({ id: doc.id, ...doc.data() });
@@ -947,8 +962,7 @@
             });
 
             // Firestore listener for Habits
-            const habitsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/habits`);
-            onSnapshot(query(habitsCollectionRef), (snapshot) => {
+            unsubscribeHabits = onSnapshot(query(collection(db, getCollectionPath('habits'))), (snapshot) => {
                 habits = [];
                 snapshot.forEach(doc => {
                     habits.push({ id: doc.id, ...doc.data() });
@@ -961,8 +975,7 @@
             });
 
             // Firestore listener for Wishlist
-            const wishlistCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/wishlist`);
-            unsubscribeWishlist = onSnapshot(query(wishlistCollectionRef), (snapshot) => {
+            unsubscribeWishlist = onSnapshot(query(collection(db, getCollectionPath('wishlist'))), (snapshot) => {
                 wishlistItems = [];
                 snapshot.forEach(doc => {
                     wishlistItems.push({ id: doc.id, ...doc.data() });
@@ -975,9 +988,8 @@
                 window.showModal('Gagal memuat daftar keinginan. Silakan coba lagi.');
             });
 
-            // Listener for user's own profile to get coupleRoomId
-            const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile/data`);
-            onSnapshot(userProfileRef, (docSnap) => {
+            // Listener for user's own profile to get coupleRoomId and nickname/profile pic
+            unsubscribeUserProfile = onSnapshot(doc(db, `artifacts/${appId}/users/${userId}/profile/data`), (docSnap) => {
                 if (docSnap.exists()) {
                     const profileData = docSnap.data();
                     partnerNicknameInput.value = profileData.nickname || '';
@@ -991,22 +1003,16 @@
                     if (newCoupleRoomId && newCoupleRoomId !== currentCoupleRoomId) {
                         currentCoupleRoomId = newCoupleRoomId;
                         console.log("User's couple room ID updated:", currentCoupleRoomId);
-                        // If there was a previous listener, unsubscribe it
-                        if (unsubscribeCoupleRoom) {
-                            unsubscribeCoupleRoom();
-                        }
-                        // Set up new listener for the actual couple room data
-                        setupCoupleRoomListener(currentCoupleRoomId);
+                        setupCoupleRoomListener(currentCoupleRoomId); // Re-setup shared data listeners
+                        setupFirestoreListeners(); // Re-initialize all listeners for shared data
                     } else if (!newCoupleRoomId && currentCoupleRoomId) {
-                        // User left a room
+                        // User left a room, switch back to private data
                         currentCoupleRoomId = null;
                         currentPartnerId = null;
                         roomStatusSpan.textContent = 'Tidak Terhubung';
                         partnerUserIdSpan.textContent = 'Belum Terhubung';
-                        if (unsubscribeCoupleRoom) {
-                            unsubscribeCoupleRoom();
-                            unsubscribeCoupleRoom = null;
-                        }
+                        if (unsubscribeCoupleRoom) { unsubscribeCoupleRoom(); unsubscribeCoupleRoom = null; }
+                        setupFirestoreListeners(); // Re-initialize all listeners for private data
                     }
                 } else {
                     // Profile document doesn't exist, initialize default values
@@ -1160,18 +1166,33 @@
         keuanganCard.addEventListener('click', () => {
             console.log("Keuangan card clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('keuangan-page');
         });
 
         tabunganCard.addEventListener('click', () => {
             console.log("Tabungan card clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('tabungan-page');
         });
 
         gameCard.addEventListener('click', () => {
             console.log("Game card clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('game-page');
         });
 
@@ -1292,10 +1313,14 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan transaksi.');
+                return;
+            }
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/transactions`), {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/transactions`), {
                     type: 'income',
                     amount: amount,
                     description: description,
@@ -1322,10 +1347,14 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan transaksi.');
+                return;
+            }
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/transactions`), {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/transactions`), {
                     type: 'expense',
                     amount: amount,
                     description: description,
@@ -1341,18 +1370,104 @@
 
         window.deleteTransaction = async function(transactionId) {
             console.log("Delete Transaction clicked:", transactionId);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/transactions`, transactionId));
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/transactions`, transactionId));
             } catch (e) {
                 console.error("Error deleting transaction: ", e);
                 window.showModal('Gagal menghapus transaksi. Silakan coba lagi.');
             }
         }
+
+        // --- Chart Logic ---
+        function updateFinanceCharts() {
+            const dates = [...new Set(transactions.map(t => new Date(t.date).toLocaleDateString('id-ID')))].sort((a, b) => new Date(a) - new Date(b));
+            const incomeData = dates.map(date => transactions.filter(t => t.type === 'income' && new Date(t.date).toLocaleDateString('id-ID') === date).reduce((sum, t) => sum + t.amount, 0));
+            const expenseData = dates.map(date => transactions.filter(t => t.type === 'expense' && new Date(t.date).toLocaleDateString('id-ID') === date).reduce((sum, t) => sum + t.amount, 0));
+
+            // Line Chart for Income vs Expense
+            const lineCtx = document.getElementById('financeLineChart').getContext('2d');
+            if (financeLineChart) {
+                financeLineChart.destroy();
+            }
+            financeLineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: incomeData,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1,
+                            fill: false
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: expenseData,
+                            borderColor: 'rgb(255, 99, 132)',
+                            tension: 0.1,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart for Expense Distribution (simplified, just showing total expense for now)
+            // To show actual distribution, you'd need categories for expenses.
+            const expenseCategories = {};
+            transactions.filter(t => t.type === 'expense').forEach(t => {
+                const category = t.description || 'Lain-lain'; // Use description as a simple category
+                expenseCategories[category] = (expenseCategories[category] || 0) + t.amount;
+            });
+
+            const pieLabels = Object.keys(expenseCategories);
+            const pieData = Object.values(expenseCategories);
+            const backgroundColors = pieLabels.map((_, i) => `hsl(${i * 60}, 70%, 50%)`); // Generate distinct colors
+
+            const pieCtx = document.getElementById('expensePieChart').getContext('2d');
+            if (expensePieChart) {
+                expensePieChart.destroy();
+            }
+            expensePieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: pieLabels,
+                    datasets: [{
+                        data: pieData,
+                        backgroundColor: backgroundColors,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribusi Pengeluaran'
+                        }
+                    }
+                }
+            });
+        }
+
 
         // --- Tabungan Feature Logic ---
         function renderSavingGoals() {
@@ -1379,13 +1494,13 @@
 
         window.deleteSavingGoal = async function(goalId) {
             console.log("Delete Saving Goal clicked:", goalId);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/savingGoals`, goalId));
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/savingGoals`, goalId));
             } catch (e) {
                 console.error("Error deleting saving goal: ", e);
                 window.showModal('Gagal menghapus tujuan tabungan. Silakan coba lagi.');
@@ -1405,10 +1520,14 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan tujuan tabungan.');
+                return;
+            }
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/savingGoals`), {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/savingGoals`), {
                     name: name,
                     targetAmount: targetAmount,
                     currentAmount: 0, // Start with 0 current amount
@@ -1502,10 +1621,14 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan event.');
+                return;
+            }
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/events`), {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/events`), {
                     date: date,
                     name: name,
                     description: description,
@@ -1547,13 +1670,13 @@
 
         window.deleteEvent = async function(eventId) {
             console.log("Delete Event clicked:", eventId);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/events`, eventId));
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/events`, eventId));
             } catch (e) {
                 console.error("Error deleting event: ", e);
                 window.showModal('Gagal menghapus event. Silakan coba lagi.');
@@ -1593,6 +1716,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                         <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" ${isCompletedToday ? 'checked' : ''} onclick="window.toggleHabitCompletion('${habit.id}', event.target.checked)">
+                        <span class="text-xs text-gray-500 ml-1">${isCompletedToday ? new Date().toLocaleDateString('id-ID') : ''}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                         <button class="text-red-600 hover:text-red-900" onclick="window.deleteHabit('${habit.id}')">Hapus</button>
@@ -1613,10 +1737,14 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan kebiasaan.');
+                return;
+            }
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/habits`), {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/habits`), {
                     name: name,
                     completedDates: {}, // Store completion dates as a map
                     createdAt: new Date().toISOString() // Store creation date
@@ -1630,13 +1758,13 @@
 
         window.toggleHabitCompletion = async function(habitId, isChecked) {
             console.log("Toggle Habit Completion clicked:", habitId, isChecked);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const habitRef = doc(db, `artifacts/${appId}/users/${userId}/habits`, habitId);
+            const habitRef = doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/habits`, habitId);
             const habitToUpdate = habits.find(h => h.id === habitId);
 
             if (habitToUpdate) {
@@ -1660,13 +1788,13 @@
 
         window.deleteHabit = async function(habitId) {
             console.log("Delete Habit clicked:", habitId);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/habits`, habitId));
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/habits`, habitId));
             } catch (e) {
                 console.error("Error deleting habit: ", e);
                 window.showModal('Gagal menghapus kebiasaan. Silakan coba lagi.');
@@ -1676,7 +1804,15 @@
         // --- Pic Drop Feature Logic (Simulated Upload) ---
         selectPhotoBtn.addEventListener('click', () => {
             console.log("Select Photo button clicked.");
-            photoUploadInput.click(); // Trigger the hidden file input
+            if (!isAuthReady || !userId) {
+                window.showModal('Mohon login terlebih dahulu.');
+                return;
+            }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengunggah foto.');
+                return;
+            }
+            photoUploadInput.click();
         });
 
         photoUploadInput.addEventListener('change', () => {
@@ -1798,10 +1934,14 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan item wishlist.');
+                return;
+            }
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/wishlist`), {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/wishlist`), {
                     name: name,
                     price: price,
                     fulfilled: false,
@@ -1817,12 +1957,12 @@
 
         window.toggleWishlistItemFulfilled = async function(itemId, isChecked) {
             console.log("Toggle Wishlist Item Fulfilled clicked:", itemId, isChecked);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const itemRef = doc(db, `artifacts/${appId}/users/${userId}/wishlist`, itemId);
+            const itemRef = doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/wishlist`, itemId);
             try {
                 await updateDoc(itemRef, {
                     fulfilled: isChecked
@@ -1835,13 +1975,13 @@
 
         window.deleteWishlistItem = async function(itemId) {
             console.log("Delete Wishlist Item clicked:", itemId);
-            if (!isAuthReady || !userId) {
-                window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
+            if (!isAuthReady || !userId || !currentCoupleRoomId) {
+                window.showModal('Aplikasi belum siap atau Anda tidak dalam ruangan pasangan.');
                 return;
             }
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/wishlist`, itemId));
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/wishlist`, itemId));
             } catch (e) {
                 console.error("Error deleting wishlist item: ", e);
                 window.showModal('Gagal menghapus item dari daftar keinginan. Silakan coba lagi.');
@@ -2036,6 +2176,7 @@
                 coupleRoomIdInput.value = newRoomRef.id; // Display the new room ID
                 currentCoupleRoomId = newRoomRef.id; // Update local state
                 setupCoupleRoomListener(newRoomRef.id); // Start listening to the new room
+                setupFirestoreListeners(); // Re-initialize all listeners to point to shared data
             } catch (e) {
                 console.error("Error creating room:", e);
                 window.showModal('Gagal membuat ruangan. Silakan coba lagi.');
@@ -2082,6 +2223,7 @@
                         window.showModal(`Berhasil bergabung ke ruangan: ${roomIdToJoin}`);
                         currentCoupleRoomId = roomIdToJoin; // Update local state
                         setupCoupleRoomListener(roomIdToJoin); // Start listening to the room
+                        setupFirestoreListeners(); // Re-initialize all listeners to point to shared data
                     } else if (roomData.partnerId === userId) {
                         window.showModal('Anda sudah bergabung di ruangan ini.');
                     } else {
@@ -2108,26 +2250,51 @@
         document.getElementById('dasbor-nav').addEventListener('click', () => {
             console.log("Dasbor nav clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('dasbor-page');
         });
         document.getElementById('kalender-nav').addEventListener('click', () => {
             console.log("Kalender nav clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('kalender-page');
         });
         document.getElementById('habits-nav').addEventListener('click', () => {
             console.log("Habits nav clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('habits-page');
         });
         document.getElementById('picdrop-nav').addEventListener('click', () => {
             console.log("Pic Drop nav clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('picdrop-page');
         });
         document.getElementById('wishlist-nav').addEventListener('click', () => {
             console.log("Wishlist nav clicked.");
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
+            // Check if in couple room. If not, show modal.
+            if (!currentCoupleRoomId) {
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                return;
+            }
             window.showPage('wishlist-page');
         });
 
