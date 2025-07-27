@@ -1,3 +1,7 @@
+Berikut adalah pembaruan pada Service Worker Anda:
+
+
+```javascript
 // Nama cache untuk aplikasi Anda
 const CACHE_NAME = 'couple-growup-cache-v1';
 
@@ -52,12 +56,12 @@ self.addEventListener('fetch', (event) => {
                 }
                 // Jika tidak ada di cache, coba ambil dari jaringan
                 return fetch(event.request).catch(() => {
-                    // Jika jaringan tidak tersedia atau gagal, berikan fallback
-                    // Untuk permintaan navigasi (misalnya, memuat halaman HTML), kembalikan index.html
+                    // If network is unavailable, you can return a fallback page
+                    // For example, if it's an HTML request, return an offline page
                     if (event.request.mode === 'navigate') {
-                        return caches.match('/index.html'); // Atau halaman offline.html khusus
+                        return caches.match('/index.html'); // Or a dedicated offline.html
                     }
-                    // Untuk aset lain, berikan respons error
+                    // For other assets, return an error response
                     return new Response('Kesalahan jaringan atau konten tidak ditemukan.', { status: 404 });
                 });
             })
