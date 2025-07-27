@@ -187,7 +187,7 @@
     </div>
 
     <!-- Main Content Area (Home Page) -->
-    <main id="home-page" class="w-full max-w-4xl flex flex-col items-center space-y-4 mb-6">
+    <main id="home-page" class="w-full max-w-4xl">
 
         <!-- Monitor Event (Central Board-like Card) -->
         <div id="monitor-event-card" class="card w-full p-4" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 200px;">
@@ -242,7 +242,7 @@
                 <input type="number" id="income-amount" placeholder="Masukkan jumlah pemasukan" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <label for="income-desc" class="text-gray-700 text-sm font-medium mb-1 mt-2">Deskripsi Pemasukan:</label>
                 <input type="text" id="income-desc" placeholder="Contoh: Gaji bulanan" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button id="add-income-btn" class="mt-4 w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors">Tambah Pemasukan</button>
+                <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
             </div>
 
             <div class="flex flex-col items-start w-full">
