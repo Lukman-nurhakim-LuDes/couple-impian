@@ -2,25 +2,25 @@
 const CACHE_NAME = 'couple-growup-cache-v1';
 
 // Daftar URL aset yang akan di-cache
-// Nama file ini disesuaikan persis dengan yang ada di folder 'icons' Anda (termasuk huruf besar/kecil dan spasi)
+// Pastikan nama file ini sesuai persis dengan yang ada di folder 'icons' Anda (termasuk huruf besar/kecil dan spasi)
 const urlsToCache = [
     '/',
     '/index.html',
-    '/icons/aku.png', // Diperbaiki: Disesuaikan dengan 'aku.png'
+    '/icons/aku.png',
     '/icons/Background.jpg',
-    '/icons/Kalender.png', // Diperbaiki: Disesuaikan dengan 'Kalender.png'
+    '/icons/Kalender.png',
     '/icons/Dasbor.png',
     '/icons/Game-time.png',
     '/icons/Habits.png',
     '/icons/keuangan.png',
     '/icons/Monitor-event.png',
     '/icons/pasangan.png',
-    '/icons/pic drop.png', // Diperbaiki: Disesuaikan dengan 'pic drop.png'
+    '/icons/pic drop.png',
     '/icons/Tabungan.png',
     '/icons/Wishlist.png',
-    '/icons/icon-192.png',
-    '/icons/icon-512.png',
-    '/icons/kamu.png', // Diperbaiki: Disesuaikan dengan 'kamu.png'
+    '/icons/icon-192.png', // Pastikan file ini ada dan berukuran 192x192px
+    '/icons/icon-512.png', // Pastikan file ini ada dan berukuran 512x512px
+    '/icons/kamu.png',
     // URL CDN eksternal yang juga perlu di-cache
     'https://cdn.tailwindcss.com',
     'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
@@ -43,7 +43,7 @@ self.addEventListener('install', (event) => {
 
 // Event 'fetch' Service Worker: Mencegat permintaan jaringan
 self.addEventListener('fetch', (event) => {
-    event.respondGith(
+    event.respondWith( // Perbaikan: 'respondGith' menjadi 'respondWith'
         caches.match(event.request)
             .then((response) => {
                 // Jika ada di cache, kembalikan respons dari cache
