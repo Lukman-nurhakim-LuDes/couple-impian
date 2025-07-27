@@ -271,8 +271,9 @@
     </header>
 
     <!-- User ID Display -->
-    <div class="w-full max-w-4xl text-right text-xs text-gray-600 mb-2">
+    <div class="w-full max-w-4xl text-right text-sm text-gray-600 mb-2">
         User ID: <span id="user-id-display" class="font-mono text-gray-800">Loading...</span>
+        <button id="logout-button" class="ml-2 px-2 py-1 bg-red-500 text-white text-xs rounded-md hidden">Logout</button>
     </div>
 
     <!-- Main Content Area (Home Page) -->
@@ -318,6 +319,20 @@
             </div>
         </div>
     </main>
+
+    <!-- Halaman Autentikasi -->
+    <div id="auth-page" class="hidden-page w-full max-w-md p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4" id="auth-title">Login</h2>
+        <p class="text-base sm:text-lg text-gray-700 mb-6" id="auth-subtitle">Masuk untuk melanjutkan petualangan Anda!</p>
+        
+        <div class="w-full space-y-4">
+            <input type="email" id="auth-email" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="password" id="auth-password" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button id="auth-submit-btn" class="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Login</button>
+            <button id="auth-toggle-btn" class="w-full px-6 py-3 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400 transition-colors">Belum punya akun? Register</button>
+        </div>
+    </div>
+
 
     <!-- Keuangan Page -->
     <div id="keuangan-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
@@ -397,8 +412,21 @@
     <div id="pasangan-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
         <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Hubungan Harmonis</h2>
         <p class="text-base sm:text-lg text-gray-700 mb-6">Fitur ini membantu Anda menjaga komunikasi dan keharmonisan dalam hubungan. Temukan ide kencan, tantangan pasangan, dan lainnya!</p>
-        <!-- Add more specific content for Pasangan feature here -->
-        <button onclick="showModal('Dapatkan ide kencan baru!')" class="mt-4 px-6 py-3 bg-pink-600 text-white rounded-lg shadow hover:bg-pink-700 transition-colors">Ide Kencan Baru</button>
+        
+        <div class="w-full max-w-md space-y-4">
+            <h3 class="text-xl font-bold text-gray-800">Profil Pasangan</h3>
+            <div class="flex flex-col items-center space-y-2">
+                <img src="https://placehold.co/100x100/e0e7ff/4338ca?text=Kamu" alt="Profil Kamu" class="w-24 h-24 rounded-full object-cover border-2 border-indigo-500">
+                <p class="text-lg font-semibold text-gray-800">Nama Kamu</p>
+                <p class="text-sm text-gray-600">ID Pengguna: <span id="partner-user-id">Belum Terhubung</span></p>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mt-6">Kelola Ruangan Pasangan</h3>
+            <input type="text" id="couple-room-id-input" placeholder="Masukkan ID Ruangan Pasangan" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button id="create-room-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors">Buat Ruangan Baru</button>
+            <button id="join-room-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Gabung Ruangan</button>
+            <p id="room-status" class="text-sm text-gray-600 mt-2">Status Ruangan: Tidak Terhubung</p>
+        </div>
+
         <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
     </div>
 
@@ -508,7 +536,7 @@
         </div>
 
         <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 mb-4">Daftar Kebiasaan</h3>
-        <div class="w-full max-w-2xl bg-gray-100 p-4 rounded-lg overflow-x-auto">
+        <div class="w-full max-w-2xl bg-gray-100 p-4 rounded-lg text-left overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -661,8 +689,8 @@
 
         // Firebase SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Get main page elements
         const homePage = document.getElementById('home-page');
@@ -678,7 +706,7 @@
         const habitsPage = document.getElementById('habits-page');
         const picdropPage = document.getElementById('picdrop-page');
         const wishlistPage = document.getElementById('wishlist-page');
-
+        const authPage = document.getElementById('auth-page'); // Halaman Autentikasi
 
         // Get feature cards (top section)
         const keuanganCard = document.getElementById('keuangan-card');
@@ -770,30 +798,34 @@
         const dashboardActiveWishlistSpan = document.getElementById('dashboard-active-wishlist');
         const dashboardFulfilledWishlistSpan = document.getElementById('dashboard-fulfilled-wishlist');
 
+        // Get Auth page elements
+        const authEmailInput = document.getElementById('auth-email');
+        const authPasswordInput = document.getElementById('auth-password');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+        const authToggleBtn = document.getElementById('auth-toggle-btn');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        const logoutButton = document.getElementById('logout-button');
+
+        let isLoginMode = true; // State for login/register form
+
+        // Get Pasangan page elements
+        const partnerUserIdSpan = document.getElementById('partner-user-id');
+        const coupleRoomIdInput = document.getElementById('couple-room-id-input');
+        const createRoomBtn = document.getElementById('create-room-btn');
+        const joinRoomBtn = document.getElementById('join-room-btn');
+        const roomStatusSpan = document.getElementById('room-status');
+
+        let currentCoupleRoomId = null; // To store the active couple room ID
+
 
         // Initialize Firebase and set up authentication
         window.addEventListener('DOMContentLoaded', async () => {
+            console.log("DOMContentLoaded fired. Initializing Firebase...");
             try {
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
-
-                // Authenticate user
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                        console.log("Signed in with custom token.");
-                    } catch (customTokenError) {
-                        console.warn("Custom token sign-in failed, falling back to anonymous:", customTokenError);
-                        // If custom token fails, try anonymous sign-in
-                        await signInAnonymously(auth);
-                        console.log("Signed in anonymously after custom token failure.");
-                    }
-                } else {
-                    // If no custom token is provided, sign in anonymously
-                    await signInAnonymously(auth);
-                    console.log("Signed in anonymously (no custom token provided).");
-                }
 
                 // Listen for auth state changes to get userId and initialize Firestore listeners
                 onAuthStateChanged(auth, (user) => {
@@ -801,22 +833,42 @@
                         userId = user.uid;
                         document.getElementById('user-id-display').textContent = userId;
                         isAuthReady = true;
+                        logoutButton.classList.remove('hidden'); // Show logout button
                         console.log("Firebase initialized and user authenticated:", userId);
 
                         // Initialize Firestore listeners after authentication
                         setupFirestoreListeners();
+                        showPage('home-page'); // Show home page after successful login
                     } else {
                         userId = null;
                         document.getElementById('user-id-display').textContent = 'Not Authenticated';
                         isAuthReady = false;
+                        logoutButton.classList.add('hidden'); // Hide logout button
                         console.log("User not authenticated.");
+                        showPage('auth-page'); // Show login page if not authenticated
                     }
                 });
+
+                // Initial authentication attempt (if no token, will fall back to anonymous)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Signed in with custom token.");
+                    } catch (customTokenError) {
+                        console.warn("Custom token sign-in failed, falling back to anonymous:", customTokenError);
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously after custom token failure.");
+                    }
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously (no custom token provided).");
+                }
 
             } catch (error) {
                 console.error("Error initializing Firebase or authenticating:", error);
                 document.getElementById('user-id-display').textContent = 'Error loading user ID';
                 showModal('Terjadi kesalahan saat memuat aplikasi. Mohon coba lagi.');
+                showPage('auth-page'); // Fallback to auth page on init error
             }
         });
 
@@ -897,6 +949,27 @@
                 console.error("Error fetching wishlist items:", error);
                 showModal('Gagal memuat daftar keinginan. Silakan coba lagi.');
             });
+
+            // Firestore listener for Couple Room (Pasangan)
+            // This is a simplified example. A real couple room needs more complex logic
+            // to manage shared data and access control.
+            const coupleRoomRef = doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/couples/default_couple_room`); // Using a fixed room ID for simplicity
+            onSnapshot(coupleRoomRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    currentCoupleRoomId = docSnap.id;
+                    roomStatusSpan.textContent = `Terhubung ke Ruangan: ${currentCoupleRoomId}`;
+                    partnerUserIdSpan.textContent = data.partnerId || 'Belum ada pasangan';
+                    // You would load shared data from this room here
+                } else {
+                    currentCoupleRoomId = null;
+                    roomStatusSpan.textContent = 'Tidak Terhubung';
+                    partnerUserIdSpan.textContent = 'Belum Terhubung';
+                }
+            }, (error) => {
+                console.error("Error fetching couple room:", error);
+                showModal('Gagal memuat data ruangan pasangan. Silakan coba lagi.');
+            });
         }
 
 
@@ -913,6 +986,7 @@
 
         // Function to show a specific page and hide others, and manage footer visibility
         function showPage(pageId) {
+            console.log("Navigating to page:", pageId);
             // Hide all main content areas
             homePage.classList.add('hidden-page');
             keuanganPage.classList.add('hidden-page');
@@ -924,41 +998,64 @@
             habitsPage.classList.add('hidden-page');
             picdropPage.classList.add('hidden-page');
             wishlistPage.classList.add('hidden-page');
-            
+            authPage.classList.add('hidden-page'); // Hide auth page
+
             mainFooter.classList.add('hidden-page'); // Hide the footer by default
 
             // Show the requested page
             const pageToShow = document.getElementById(pageId);
             if (pageToShow) {
                 pageToShow.classList.remove('hidden-page');
+            } else {
+                console.error("Page not found:", pageId);
             }
 
-            // If navigating back to home, show the footer and reset active state
-            if (pageId === 'home-page') {
-                mainFooter.classList.remove('hidden-page'); // Show footer when on home page
-                // Ensure Dasbor is active when returning to home page
+            // Manage footer visibility and active state
+            if (pageId === 'home-page' || pageId === 'dasbor-page' || pageId === 'kalender-page' || pageId === 'habits-page' || pageId === 'picdrop-page' || pageId === 'wishlist-page') {
+                mainFooter.classList.remove('hidden-page'); // Show footer for these pages
                 footerNavItems.forEach(item => item.classList.remove('active'));
-                document.getElementById('dasbor-nav').classList.add('active');
-                // Set Monitor Event content to default Dasbor message
-                monitorEventTitle.textContent = 'Monitor Event';
-                monitorEventContent.textContent = 'Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.';
+                const activeNavItem = document.getElementById(`${pageId.replace('-page', '')}-nav`);
+                if (activeNavItem) {
+                    activeNavItem.classList.add('active');
+                }
+            } else {
+                mainFooter.classList.add('hidden-page'); // Hide footer for other pages
+            }
+
+            // Special handling for auth page: hide user ID and logout button
+            if (pageId === 'auth-page') {
+                document.getElementById('user-id-display').parentElement.classList.add('hidden');
+                logoutButton.classList.add('hidden');
+            } else {
+                document.getElementById('user-id-display').parentElement.classList.remove('hidden');
+                if (auth.currentUser) {
+                    logoutButton.classList.remove('hidden');
+                }
             }
         }
 
         // Event Listeners for Main Feature Cards (top section)
         keuanganCard.addEventListener('click', () => {
+            console.log("Keuangan card clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('keuangan-page');
         });
 
         tabunganCard.addEventListener('click', () => {
+            console.log("Tabungan card clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('tabungan-page');
         });
 
         gameCard.addEventListener('click', () => {
+            console.log("Game card clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('game-page');
         });
 
         pasanganCard.addEventListener('click', () => {
+            console.log("Pasangan card clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('pasangan-page');
         });
 
@@ -1026,6 +1123,7 @@
         }
 
         addIncomeBtn.addEventListener('click', async () => {
+            console.log("Add Income button clicked.");
             const amount = parseFloat(incomeAmountInput.value);
             const description = incomeDescInput.value.trim();
 
@@ -1054,6 +1152,7 @@
         });
 
         addExpenseBtn.addEventListener('click', async () => {
+            console.log("Add Expense button clicked.");
             const amount = parseFloat(expenseAmountInput.value);
             const description = expenseDescInput.value.trim();
 
@@ -1081,6 +1180,7 @@
             }
         });
         async function deleteTransaction(transactionId) {
+            console.log("Delete Transaction clicked:", transactionId);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1117,6 +1217,7 @@
         }
 
         async function deleteSavingGoal(goalId) {
+            console.log("Delete Saving Goal clicked:", goalId);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1130,6 +1231,7 @@
         }
 
         addSavingGoalBtn.addEventListener('click', async () => {
+            console.log("Add Saving Goal button clicked.");
             const name = savingGoalNameInput.value.trim();
             const targetAmount = parseFloat(savingGoalAmountInput.value);
 
@@ -1212,16 +1314,19 @@
         }
 
         prevMonthBtn.addEventListener('click', () => {
+            console.log("Prev Month button clicked.");
             currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
             renderCalendar();
         });
 
         nextMonthBtn.addEventListener('click', () => {
+            console.log("Next Month button clicked.");
             currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
             renderCalendar();
         });
 
         addEventBtn.addEventListener('click', async () => {
+            console.log("Add Event button clicked.");
             const date = eventDateInput.value;
             const name = eventNameInput.value.trim();
             const description = eventDescriptionInput.value.trim();
@@ -1277,6 +1382,7 @@
         }
 
         async function deleteEvent(eventId) {
+            console.log("Delete Event clicked:", eventId);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1332,6 +1438,7 @@
         }
 
         addHabitBtn.addEventListener('click', async () => {
+            console.log("Add Habit button clicked.");
             const name = habitNameInput.value.trim();
             if (!name) {
                 showModal('Mohon masukkan nama kebiasaan.');
@@ -1356,6 +1463,7 @@
         });
 
         async function toggleHabitCompletion(habitId, isChecked) {
+            console.log("Toggle Habit Completion clicked:", habitId, isChecked);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1381,9 +1489,10 @@
                     showModal('Gagal memperbarui status kebiasaan. Silakan coba lagi.');
                 }
             }
-        });
+        }
 
         async function deleteHabit(habitId) {
+            console.log("Delete Habit clicked:", habitId);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1394,14 +1503,16 @@
                 console.error("Error deleting habit: ", e);
                 showModal('Gagal menghapus kebiasaan. Silakan coba lagi.');
             }
-        });
+        }
 
         // --- Pic Drop Feature Logic (Simulated Upload) ---
         selectPhotoBtn.addEventListener('click', () => {
+            console.log("Select Photo button clicked.");
             photoUploadInput.click(); // Trigger the hidden file input
         });
 
         photoUploadInput.addEventListener('change', () => {
+            console.log("Photo input changed.");
             if (photoUploadInput.files.length > 0) {
                 uploadPhotoBtn.classList.remove('hidden');
             } else {
@@ -1410,6 +1521,7 @@
         });
 
         uploadPhotoBtn.addEventListener('click', () => {
+            console.log("Upload Photo button clicked.");
             const file = photoUploadInput.files[0];
             const caption = photoCaptionInput.value.trim();
 
@@ -1462,6 +1574,7 @@
         }
 
         function deletePhoto(index) {
+            console.log("Delete Photo clicked:", index);
             uploadedPhotos.splice(index, 1);
             renderPhotoGallery();
             showModal('Foto berhasil dihapus.');
@@ -1493,6 +1606,7 @@
         }
 
         addWishlistItemBtn.addEventListener('click', async () => {
+            console.log("Add Wishlist Item button clicked.");
             const name = wishlistItemNameInput.value.trim();
             const price = parseFloat(wishlistItemPriceInput.value) || 0;
 
@@ -1521,6 +1635,7 @@
         });
 
         async function toggleWishlistItemFulfilled(itemId, isChecked) {
+            console.log("Toggle Wishlist Item Fulfilled clicked:", itemId, isChecked);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1537,6 +1652,7 @@
         }
 
         async function deleteWishlistItem(itemId) {
+            console.log("Delete Wishlist Item clicked:", itemId);
             if (!isAuthReady || !userId) {
                 showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
@@ -1586,29 +1702,188 @@
             dashboardFulfilledWishlistSpan.textContent = fulfilledItems;
         }
 
-        // Initial content load: show home page and default to Dasbor content
+        // --- Authentication Logic ---
+        authToggleBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                authTitle.textContent = 'Login';
+                authSubtitle.textContent = 'Masuk untuk melanjutkan petualangan Anda!';
+                authSubmitBtn.textContent = 'Login';
+                authToggleBtn.textContent = 'Belum punya akun? Register';
+            } else {
+                authTitle.textContent = 'Register';
+                authSubtitle.textContent = 'Daftar untuk memulai petualangan baru!';
+                authSubmitBtn.textContent = 'Register';
+                authToggleBtn.textContent = 'Sudah punya akun? Login';
+            }
+        });
+
+        authSubmitBtn.addEventListener('click', async () => {
+            const email = authEmailInput.value;
+            const password = authPasswordInput.value;
+
+            if (!email || !password) {
+                showModal('Email dan password tidak boleh kosong.');
+                return;
+            }
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showModal('Login berhasil!');
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showModal('Registrasi berhasil! Silakan login.');
+                    isLoginMode = true; // Switch back to login mode after registration
+                    authToggleBtn.click(); // Trigger UI update
+                }
+            } catch (error) {
+                console.error("Authentication error:", error);
+                let errorMessage = 'Terjadi kesalahan autentikasi.';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Email sudah terdaftar.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Format email tidak valid.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password terlalu lemah (minimal 6 karakter).';
+                } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = 'Email atau password salah.';
+                }
+                showModal(errorMessage);
+            }
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showModal('Anda telah logout.');
+                // onAuthStateChanged will handle showing auth-page
+            } catch (error) {
+                console.error("Logout error:", error);
+                showModal('Gagal logout. Silakan coba lagi.');
+            }
+        });
+
+        // --- Couple Room Logic (Pasangan Feature) ---
+        createRoomBtn.addEventListener('click', async () => {
+            console.log("Create Room button clicked.");
+            if (!isAuthReady || !userId) {
+                showModal('Mohon login terlebih dahulu.');
+                return;
+            }
+
+            try {
+                // Check if user already has a room or is part of one
+                const userDocRef = doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/profile/data`);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists() && userDocSnap.data().coupleRoomId) {
+                    showModal(`Anda sudah terhubung ke ruangan: ${userDocSnap.data().coupleRoomId}`);
+                    return;
+                }
+
+                // Create a new room document
+                const newRoomRef = doc(collection(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/couples`));
+                await setDoc(newRoomRef, {
+                    creatorId: userId,
+                    partnerId: null,
+                    createdAt: new Date().toISOString()
+                });
+
+                // Update user's profile with the new room ID
+                await setDoc(userDocRef, { coupleRoomId: newRoomRef.id }, { merge: true });
+
+                showModal(`Ruangan baru berhasil dibuat! ID Ruangan Anda: ${newRoomRef.id}. Bagikan ID ini ke pasangan Anda.`);
+                coupleRoomIdInput.value = newRoomRef.id; // Display the new room ID
+                roomStatusSpan.textContent = `Terhubung ke Ruangan: ${newRoomRef.id}`;
+                partnerUserIdSpan.textContent = 'Menunggu pasangan...';
+            } catch (e) {
+                console.error("Error creating room:", e);
+                showModal('Gagal membuat ruangan. Silakan coba lagi.');
+            }
+        });
+
+        joinRoomBtn.addEventListener('click', async () => {
+            console.log("Join Room button clicked.");
+            if (!isAuthReady || !userId) {
+                showModal('Mohon login terlebih dahulu.');
+                return;
+            }
+
+            const roomIdToJoin = coupleRoomIdInput.value.trim();
+            if (!roomIdToJoin) {
+                showModal('Mohon masukkan ID Ruangan untuk bergabung.');
+                return;
+            }
+
+            try {
+                // Check if user already has a room or is part of one
+                const userDocRef = doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${userId}/profile/data`);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists() && userDocSnap.data().coupleRoomId) {
+                    showModal(`Anda sudah terhubung ke ruangan: ${userDocSnap.data().coupleRoomId}`);
+                    return;
+                }
+
+                // Try to join the room
+                const roomRef = doc(db, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/couples`, roomIdToJoin);
+                const roomSnap = await getDoc(roomRef);
+
+                if (roomSnap.exists()) {
+                    const roomData = roomSnap.data();
+                    if (roomData.creatorId === userId) {
+                        showModal('Anda adalah pembuat ruangan ini.');
+                        // Update user's profile with the room ID if not already
+                        await setDoc(userDocRef, { coupleRoomId: roomIdToJoin }, { merge: true });
+                    } else if (roomData.partnerId === null) {
+                        await updateDoc(roomRef, { partnerId: userId });
+                        await setDoc(userDocRef, { coupleRoomId: roomIdToJoin }, { merge: true });
+                        showModal(`Berhasil bergabung ke ruangan: ${roomIdToJoin}`);
+                    } else if (roomData.partnerId === userId) {
+                        showModal('Anda sudah bergabung di ruangan ini.');
+                    } else {
+                        showModal('Ruangan ini sudah penuh.');
+                    }
+                } else {
+                    showModal('ID Ruangan tidak ditemukan.');
+                }
+            } catch (e) {
+                console.error("Error joining room:", e);
+                showModal('Gagal bergabung ke ruangan. Silakan coba lagi.');
+            }
+        });
+
+
+        // Initial content load: show home page or auth page based on auth state
         window.addEventListener('load', () => {
-            showPage('home-page'); // Ensure home page is visible initially
-            // Set initial Monitor Event content (static)
+            console.log("Window loaded.");
+            // onAuthStateChanged will handle initial page display
             updateMonitorEventContent('Monitor Event', 'Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.');
-            // Financial, Saving Goals, Habits, Wishlist data will be loaded via Firestore listeners
-            // Dashboard will update once data is loaded through listeners
         });
 
         // Event Listeners for Footer Navigation (now navigate to specific pages)
         document.getElementById('dasbor-nav').addEventListener('click', () => {
+            console.log("Dasbor nav clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('dasbor-page');
         });
         document.getElementById('kalender-nav').addEventListener('click', () => {
+            console.log("Kalender nav clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('kalender-page');
         });
         document.getElementById('habits-nav').addEventListener('click', () => {
+            console.log("Habits nav clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('habits-page');
         });
         document.getElementById('picdrop-nav').addEventListener('click', () => {
+            console.log("Pic Drop nav clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('picdrop-page');
         });
         document.getElementById('wishlist-nav').addEventListener('click', () => {
+            console.log("Wishlist nav clicked.");
+            if (!isAuthReady) { showModal('Mohon login terlebih dahulu.'); return; }
             showPage('wishlist-page');
         });
 
