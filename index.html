@@ -31,11 +31,8 @@
         }
         .card:hover {
             transform: translateY(-5px);
-            /* Anda bisa menambahkan efek hover lain di sini, misalnya border atau sedikit bayangan */
-            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
         }
         .icon-placeholder {
-            /* Menghilangkan width dan height tetap di sini, biarkan Tailwind mengontrolnya */
             background-color: transparent; /* Menghilangkan latar belakang abu-abu */
             border-radius: 0.75rem; /* Rounded corners tetap */
             display: flex;
@@ -162,95 +159,6 @@
             border-radius: 0.5rem;
             transition: width 0.5s ease-in-out;
         }
-
-        /* Specific styles for the main content area to match the layout image */
-        #home-page {
-            position: relative; /* Needed for absolute positioning of elements */
-            width: 100%;
-            max-width: 400px; /* Adjust based on desired phone width */
-            height: 600px; /* Adjust based on desired phone height */
-            margin-top: 0; /* Remove top margin */
-            padding: 0; /* Remove padding */
-            display: block; /* Ensure it takes up space for background */
-        }
-
-        /* Positioning for elements within home-page to match the layout image */
-        #monitor-event-card {
-            position: absolute;
-            top: 15%; /* Adjust based on image */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%; /* Adjust width */
-            height: 40%; /* Adjust height */
-            background-image: url('icons/Monitor-event.png'); /* Use the monitor board image */
-            background-size: 100% 100%; /* Stretch to fill */
-            background-repeat: no-repeat;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 0; /* Remove padding from card itself */
-            color: #333; /* Adjust text color for readability */
-        }
-        #monitor-event-card h2, #monitor-event-card div {
-            color: #333; /* Ensure text is visible on the board background */
-            text-shadow: 0 0 2px rgba(255,255,255,0.7); /* Add slight shadow for readability */
-        }
-
-        /* Positioning for feature cards */
-        #keuangan-card { position: absolute; top: 45%; left: 10%; width: 25%; height: 15%; }
-        #tabungan-card { position: absolute; top: 65%; left: 10%; width: 25%; height: 15%; }
-        #game-card { position: absolute; top: 45%; right: 10%; width: 25%; height: 15%; }
-        #pasangan-card { position: absolute; top: 65%; right: 10%; width: 25%; height: 15%; }
-
-        /* Ensure texts within cards are centered and visible */
-        .card h2 {
-            font-size: 0.8rem; /* Smaller font for mobile cards */
-            margin-top: 0.2rem;
-            color: #333; /* Adjust text color */
-        }
-        .card .icon-placeholder {
-            width: 3rem; /* Smaller icon size for mobile cards */
-            height: 3rem;
-            margin-bottom: 0.1rem;
-        }
-
-        /* Adjustments for footer icons to match layout */
-        .footer-nav-item .icon-placeholder {
-            width: 2.5rem; /* Smaller footer icons */
-            height: 2.5rem;
-            margin-bottom: 0.1rem;
-        }
-        .footer-nav-item p {
-            font-size: 0.6rem; /* Smaller footer text */
-        }
-
-        /* Adjust header elements */
-        header .flex.items-center img {
-            width: 2.5rem; /* Smaller header icons */
-            height: 2.5rem;
-        }
-        header h1 {
-            font-size: 1.5rem; /* Smaller header title */
-        }
-        header p {
-            font-size: 0.75rem; /* Smaller header subtitle */
-        }
-
-        /* Adjust user ID display */
-        #user-id-display {
-            font-size: 0.7rem; /* Smaller user ID text */
-        }
-
-        /* Specific styles for pages other than home */
-        #keuangan-page, #tabungan-page, #game-page, #pasangan-page,
-        #dasbor-page, #kalender-page, #habits-page, #picdrop-page, #wishlist-page {
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background for content pages */
-            padding: 1rem; /* Adjust padding */
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body class="flex flex-col items-center min-h-screen p-2 sm:p-4 lg:p-8">
@@ -279,43 +187,46 @@
     </div>
 
     <!-- Main Content Area (Home Page) -->
-    <main id="home-page" class="w-full max-w-4xl">
+    <main id="home-page" class="w-full max-w-4xl flex flex-col items-center space-y-4 mb-6">
 
-        <!-- Monitor Event (Central Board-like Card) - Placed first in HTML for layering, but positioned with CSS -->
-        <div id="monitor-event-card" class="card">
+        <!-- Monitor Event (Central Board-like Card) -->
+        <div id="monitor-event-card" class="card w-full p-4" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 200px;">
             <h2 id="monitor-event-title" class="text-lg sm:text-xl font-bold text-gray-800 mb-1">Monitor Event</h2>
             <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600">
                 Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.
             </div>
         </div>
 
-        <!-- Keuangan Card -->
-        <div id="keuangan-card" class="card">
-            <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
-                <img src="icons/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
+        <!-- Grid for Feature Cards (Keuangan, Game, Tabungan, Pasangan) -->
+        <div class="grid grid-cols-2 gap-3 w-full px-2">
+            <!-- Keuangan Card -->
+            <div id="keuangan-card" class="card">
+                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+                    <img src="icons/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
+                </div>
+                <h2 class="text-lg font-semibold text-gray-800">Keuangan</h2>
             </div>
-            <h2 class="text-lg font-semibold text-gray-800">Keuangan</h2>
-        </div>
-        <!-- Game Card -->
-        <div id="game-card" class="card">
-            <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
-                <img src="icons/Game-time.png" alt="Game Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
+            <!-- Game Card -->
+            <div id="game-card" class="card">
+                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+                    <img src="icons/Game-time.png" alt="Game Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
+                </div>
+                <h2 class="text-lg font-semibold text-gray-800">Game</h2>
             </div>
-            <h2 class="text-lg font-semibold text-gray-800">Game</h2>
-        </div>
-        <!-- Tabungan Card -->
-        <div id="tabungan-card" class="card">
-            <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
-                <img src="icons/Tabungan.png" alt="Tabungan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
+            <!-- Tabungan Card -->
+            <div id="tabungan-card" class="card">
+                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+                    <img src="icons/Tabungan.png" alt="Tabungan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
+                </div>
+                <h2 class="text-lg font-semibold text-gray-800">Tabungan</h2>
             </div>
-            <h2 class="text-lg font-semibold text-gray-800">Tabungan</h2>
-        </div>
-        <!-- Pasangan Card -->
-        <div id="pasangan-card" class="card">
-            <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
-                <img src="icons/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
+            <!-- Pasangan Card -->
+            <div id="pasangan-card" class="card">
+                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+                    <img src="icons/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
+                </div>
+                <h2 class="text-lg font-semibold text-gray-800">Pasangan</h2>
             </div>
-            <h2 class="text-lg font-semibold text-gray-800">Pasangan</h2>
         </div>
     </main>
 
@@ -1394,7 +1305,7 @@
                 console.error("Error deleting habit: ", e);
                 showModal('Gagal menghapus kebiasaan. Silakan coba lagi.');
             }
-        });
+        }
 
         // --- Pic Drop Feature Logic (Simulated Upload) ---
         selectPhotoBtn.addEventListener('click', () => {
@@ -1615,91 +1526,3 @@
     </script>
 </body>
 </html>
-```
-Berikut adalah pembaruan pada Service Worker Anda:
-
-
-```javascript
-// Nama cache untuk aplikasi Anda
-const CACHE_NAME = 'couple-growup-cache-v1';
-
-// Daftar URL aset yang akan di-cache
-// Pastikan nama file ini sesuai persis dengan yang ada di folder 'icons' Anda (termasuk huruf besar/kecil dan spasi)
-const urlsToCache = [
-    '/',
-    '/index.html',
-    '/icons/aku.png',
-    '/icons/Background.jpg',
-    '/icons/Kalender.png',
-    '/icons/Dasbor.png',
-    '/icons/Game-time.png',
-    '/icons/Habits.png',
-    '/icons/keuangan.png',
-    '/icons/Monitor-event.png',
-    '/icons/pasangan.png',
-    '/icons/pic drop.png',
-    '/icons/Tabungan.png',
-    '/icons/Wishlist.png',
-    '/icons/icon-192.png',
-    '/icons/icon-512.png',
-    '/icons/kamu.png',
-    // URL CDN eksternal yang juga perlu di-cache
-    'https://cdn.tailwindcss.com',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
-];
-
-// Event 'install' Service Worker: Menginstal Service Worker dan membuka cache
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('Service Worker: Cache dibuka');
-                // Menambahkan semua aset ke cache
-                return cache.addAll(urlsToCache);
-            })
-            .catch((error) => {
-                console.error('Service Worker: Gagal menambahkan aset ke cache selama instalasi:', error);
-            })
-    );
-});
-
-// Event 'fetch' Service Worker: Mencegat permintaan jaringan
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                // Jika ada di cache, kembalikan respons dari cache
-                if (response) {
-                    return response;
-                }
-                // Jika tidak ada di cache, coba ambil dari jaringan
-                return fetch(event.request).catch(() => {
-                    // Jika jaringan tidak tersedia atau gagal, berikan fallback
-                    // Untuk permintaan navigasi (misalnya, memuat halaman HTML), kembalikan index.html
-                    if (event.request.mode === 'navigate') {
-                        return caches.match('/index.html'); // Atau halaman offline.html khusus
-                    }
-                    // Untuk aset lain, berikan respons error
-                    return new Response('Kesalahan jaringan atau konten tidak ditemukan.', { status: 404 });
-                });
-            })
-    );
-});
-
-// Event 'activate' Service Worker: Mengaktifkan Service Worker dan membersihkan cache lama
-self.addEventListener('activate', (event) => {
-    const cacheWhitelist = [CACHE_NAME]; // Daftar cache yang valid saat ini
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    // Hapus cache yang tidak ada dalam daftar putih (whitelist)
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        console.log('Service Worker: Menghapus cache lama:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-});
