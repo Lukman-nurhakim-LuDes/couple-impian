@@ -1,7 +1,3 @@
-Berikut adalah pembaruan pada Service Worker Anda:
-
-
-```javascript
 // Nama cache untuk aplikasi Anda
 const CACHE_NAME = 'couple-growup-cache-v1';
 
