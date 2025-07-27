@@ -26,7 +26,7 @@
         /* Mengatur ukuran font untuk h1 dan h2 secara eksplisit menjadi 24px */
         /* Mengurangi ukuran font untuk h1 di header */
         h1 {
-            font-size: 40px !important; /* Memperbesar ukuran font untuk judul utama */
+            font-size: 25px !important; /* Memperkecil ukuran font untuk judul utama */
         }
         h2 {
             font-size: 24px !important; /* Menggunakan !important untuk menimpa Tailwind */
@@ -255,10 +255,10 @@
     <main id="home-page" class="w-full max-w-4xl">
 
         <!-- Monitor Event (Central Board-like Card) -->
-        <div id="monitor-event-card" class="card w-full p-4 mt-8" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px;">
+        <div id="monitor-event-card" class="card w-full p-4 mt-8 flex flex-col justify-center items-center" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px;">
             <h2 class="font-bold text-gray-800 mb-1">Monitor Event</h2>
             <!-- Menghapus sub judul kedua dari Monitor Event -->
-            <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600 mt-4"> <!-- Menambahkan margin-top untuk menggeser teks ke bawah -->
+            <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600 text-center mt-4"> <!-- Menambahkan margin-top untuk menggeser teks ke bawah dan rata tengah -->
                 <!-- Konten akan diisi secara dinamis -->
             </div>
         </div>
