@@ -43,7 +43,7 @@ self.addEventListener('install', (event) => {
 
 // Event 'fetch' Service Worker: Mencegat permintaan jaringan
 self.addEventListener('fetch', (event) => {
-    event.respondWith( // Perbaikan: 'respondGith' menjadi 'respondWith'
+    event.respondWith(
         caches.match(event.request)
             .then((response) => {
                 // Jika ada di cache, kembalikan respons dari cache
