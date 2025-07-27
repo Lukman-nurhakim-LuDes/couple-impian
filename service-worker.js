@@ -1,5 +1,5 @@
 // Nama cache untuk aplikasi Anda
-const CACHE_NAME = 'couple-growup-cache-v1';
+const CACHE_NAME = 'couple-growup-cache-v2'; // Ubah versi cache untuk memperbarui aset
 
 // Daftar URL aset yang akan di-cache
 // Pastikan nama file ini sesuai persis dengan yang ada di folder 'icons' Anda (termasuk huruf besar/kecil dan spasi)
@@ -18,12 +18,14 @@ const urlsToCache = [
     '/icons/pic drop.png',
     '/icons/Tabungan.png',
     '/icons/Wishlist.png',
-    '/icons/icon-192.png', // Pastikan file ini ada dan berukuran 192x192px
-    '/icons/icon-512.png', // Pastikan file ini ada dan berukuran 512x512px
+    '/icons/icon-192.png', 
+    '/icons/icon-512.png', 
     '/icons/kamu.png',
+    '/icons/polaroi.png', // Tambahkan ikon polaroi.png
     // URL CDN eksternal yang juga perlu di-cache
     'https://cdn.tailwindcss.com',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap',
+    'https://cdn.jsdelivr.net/npm/chart.js' // Tambahkan Chart.js CDN
 ];
 
 // Event 'install' Service Worker: Menginstal Service Worker dan membuka cache
