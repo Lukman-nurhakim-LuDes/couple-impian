@@ -30,12 +30,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 1rem; /* Sesuaikan padding agar konten tidak terlalu rapat */
+            padding: 0.5rem; /* Sesuaikan padding agar konten tidak terlalu rapat di mobile */
+            text-align: center;
         }
         .card:hover {
             transform: translateY(-5px);
-            /* Anda bisa menambahkan efek hover lain di sini, misalnya border atau sedikit bayangan */
-            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
         }
         .icon-placeholder {
             width: 4rem; /* 64px */
@@ -168,68 +167,78 @@
         }
     </style>
 </head>
-<body class="flex flex-col items-center min-h-screen p-4 sm:p-6 lg:p-8">
+<body class="flex flex-col items-center min-h-screen p-2 sm:p-4 lg:p-8">
 
     <!-- Header Section -->
-    <header class="w-full max-w-4xl bg-transparent p-4 sm:p-6 rounded-2xl shadow-none flex justify-between items-center mb-8">
+    <header class="w-full max-w-4xl bg-transparent p-2 sm:p-4 rounded-2xl shadow-none flex justify-between items-center mb-4">
         <!-- Icon Aku -->
         <div class="flex items-center">
-            <img src="icons/aku.png" alt="Aku Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Aku';">
+            <img src="icons/aku.png" alt="Aku Icon" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Aku';">
         </div>
         
         <div class="text-center">
-            <h1 class="text-2xl sm:text-3xl font-bold text-indigo-700">Couple GrowUp</h1>
-            <p class="text-sm sm:text-base text-gray-600 mt-1">Petualangan Menuju Impian</p>
+            <h1 class="text-xl sm:text-2xl font-bold text-indigo-700">Couple GrowUp</h1>
+            <p class="text-xs sm:text-sm text-gray-600 mt-0.5">Petualangan Menuju Impian</p>
         </div>
         
         <!-- Icon Kamu -->
         <div class="flex items-center">
-            <img src="icons/kamu.png" alt="Kamu Icon" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kamu';">
+            <img src="icons/kamu.png" alt="Kamu Icon" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kamu';">
         </div>
     </header>
 
     <!-- User ID Display -->
-    <div class="w-full max-w-4xl text-right text-sm text-gray-600 mb-4">
+    <div class="w-full max-w-4xl text-right text-xs text-gray-600 mb-2">
         User ID: <span id="user-id-display" class="font-mono text-gray-800">Loading...</span>
     </div>
 
     <!-- Main Content Area (Home Page) -->
-    <main id="home-page" class="w-full max-w-4xl grid grid-cols-2 gap-4 sm:gap-6 mb-8 md:grid-cols-3">
+    <main id="home-page" class="w-full max-w-4xl flex flex-col items-center space-y-4 mb-6">
 
-        <!-- Keuangan Card -->
-        <div id="keuangan-card" class="card p-2 sm:p-4">
-            <div class="icon-placeholder mb-1 sm:mb-3">
-                <img src="icons/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
+        <!-- Top Row: Keuangan, Game, Tabungan, Pasangan (arranged in a grid) -->
+        <div class="grid grid-cols-2 gap-3 w-full px-2">
+            <!-- Keuangan Card -->
+            <div id="keuangan-card" class="card">
+                <div class="icon-placeholder mb-0.5">
+                    <img src="icons/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
+                </div>
+                <h2 class="text-sm font-semibold text-gray-800">Keuangan</h2>
             </div>
-            <h2 class="text-base sm:text-lg font-semibold text-gray-800">Keuangan</h2>
-        </div>
-        <!-- Game Card -->
-        <div id="game-card" class="card p-2 sm:p-4">
-            <div class="icon-placeholder mb-1 sm:mb-3">
-                <img src="icons/Game-time.png" alt="Game Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
+            <!-- Game Card -->
+            <div id="game-card" class="card">
+                <div class="icon-placeholder mb-0.5">
+                    <img src="icons/Game-time.png" alt="Game Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
+                </div>
+                <h2 class="text-sm font-semibold text-gray-800">Game</h2>
             </div>
-            <h2 class="text-base sm:text-lg font-semibold text-gray-800">Game</h2>
-        </div>
-        <!-- Tabungan Card -->
-        <div id="tabungan-card" class="card p-2 sm:p-4">
-            <div class="icon-placeholder mb-1 sm:mb-3">
-                <img src="icons/Tabungan.png" alt="Tabungan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
+            <!-- Tabungan Card -->
+            <div id="tabungan-card" class="card">
+                <div class="icon-placeholder mb-0.5">
+                    <img src="icons/Tabungan.png" alt="Tabungan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
+                </div>
+                <h2 class="text-sm font-semibold text-gray-800">Tabungan</h2>
             </div>
-            <h2 class="text-base sm:text-lg font-semibold text-gray-800">Tabungan</h2>
-        </div>
-        <!-- Pasangan Card -->
-        <div id="pasangan-card" class="card p-2 sm:p-4">
-            <div class="icon-placeholder mb-1 sm:mb-3">
-                <img src="icons/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
+            <!-- Pasangan Card -->
+            <div id="pasangan-card" class="card">
+                <div class="icon-placeholder mb-0.5">
+                    <img src="icons/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
+                </div>
+                <h2 class="text-sm font-semibold text-gray-800">Pasangan</h2>
             </div>
-            <h2 class="text-base sm:text-lg font-semibold text-gray-800">Pasangan</h2>
         </div>
-        <!-- Monitor Event (Central Card) -->
-        <div id="monitor-event-card" class="card p-4 sm:p-6 col-span-2">
-            <h2 id="monitor-event-title" class="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">Monitor Event</h2>
+
+        <!-- Monitor Event (Central Board-like Card) -->
+        <div id="monitor-event-card" class="card w-full p-4" style="background-image: url('icons/monitor-board-background.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 200px;">
+            <h2 id="monitor-event-title" class="text-lg sm:text-xl font-bold text-gray-800 mb-1">Monitor Event</h2>
             <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600">
                 Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.
             </div>
+        </div>
+
+        <!-- Money Bag and Couple Illustration -->
+        <div class="flex justify-around items-end w-full mt-4">
+            <img src="icons/money-bag.png" alt="Money Bag" class="w-20 h-20 sm:w-24 sm:h-24 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/96x96/d1d5db/4b5563?text=Money';">
+            <img src="icons/couple-illustration.png" alt="Couple Illustration" class="w-20 h-20 sm:w-24 sm:h-24 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/96x96/d1d5db/4b5563?text=Couple';">
         </div>
     </main>
 
@@ -492,39 +501,39 @@
     </div>
 
     <!-- Footer Navigation -->
-    <footer id="main-footer" class="w-full max-w-4xl bg-transparent p-4 sm:p-6 rounded-2xl shadow-none flex justify-around items-center">
+    <footer id="main-footer" class="w-full max-w-4xl bg-transparent p-2 sm:p-4 rounded-2xl shadow-none flex justify-around items-center">
         <!-- Dasbor Card -->
         <div id="dasbor-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer active">
-            <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/Dasbor.png" alt="Dasbor Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Dasbor';">
+            <div class="icon-placeholder mb-0.5 w-10 h-10 sm:w-12 sm:h-12">
+                <img src="icons/Dasbor.png" alt="Dasbor Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Dasbor';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Dasbor</p>
         </div>
         <!-- Kalender Card -->
         <div id="kalender-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
-            <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/Kalender.png" alt="Kalender Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
+            <div class="icon-placeholder mb-0.5 w-10 h-10 sm:w-12 sm:h-12">
+                <img src="icons/Kalender.png" alt="Kalender Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Kalender';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Kalender</p>
         </div>
         <!-- Habits Card -->
         <div id="habits-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
-            <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/Habits.png" alt="Habits Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Habits';">
+            <div class="icon-placeholder mb-0.5 w-10 h-10 sm:w-12 sm:h-12">
+                <img src="icons/Habits.png" alt="Habits Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Habits';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Habits</p>
         </div>
         <!-- Pic Drop Card -->
         <div id="picdrop-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
-            <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/pic drop.png" alt="Pic Drop Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
+            <div class="icon-placeholder mb-0.5 w-10 h-10 sm:w-12 sm:h-12">
+                <img src="icons/pic drop.png" alt="Pic Drop Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Pic+Drop';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Pic Drop</p>
         </div>
         <!-- Wishlist Card -->
         <div id="wishlist-nav" class="footer-nav-item flex flex-col items-center text-center cursor-pointer">
-            <div class="icon-placeholder mb-1 w-12 h-12">
-                <img src="icons/Wishlist.png" alt="Wishlist Icon" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Wishlist';">
+            <div class="icon-placeholder mb-0.5 w-10 h-10 sm:w-12 sm:h-12">
+                <img src="icons/Wishlist.png" alt="Wishlist Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/48x48/d1d5db/4b5563?text=Wishlist';">
             </div>
             <p class="text-xs sm:text-sm text-gray-700">Wishlist</p>
         </div>
