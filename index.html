@@ -22,18 +22,22 @@
             background-attachment: fixed; 
         }
         /* Mengatur ukuran font untuk h1 dan h2 secara eksplisit menjadi 24px */
-        h1, h2 {
+        /* Mengurangi ukuran font untuk h1 di header */
+        h1 {
+            font-size: 20px !important; /* Mengurangi ukuran font untuk judul utama */
+        }
+        h2 {
             font-size: 24px !important; /* Menggunakan !important untuk menimpa Tailwind */
         }
-        /* Remove white background and shadow from cards */
+        /* Mengatur latar belakang kartu menjadi transparan dan tanpa bayangan */
         .card {
-            background-color: transparent; 
-            box-shadow: none; 
+            background-color: transparent; /* Latar belakang transparan */
+            box-shadow: none; /* Tanpa bayangan */
             border-radius: 1.25rem; 
             transition: transform 0.2s ease-in-out;
             cursor: pointer; 
             padding: 0.5rem; 
-            text-align: center;
+            /* text-align: center; (akan di-override oleh text-left/right di HTML) */
         }
         .card:hover {
             transform: translateY(-5px);
@@ -43,10 +47,10 @@
             border-radius: 0.75rem; 
             display: flex;
             align-items: center;
-            justify-content: center;
+            /* justify-content: center; (akan di-override oleh justify-start/end di HTML) */
             color: #4b5563;
             font-weight: 600;
-            text-align: center;
+            /* text-align: center; (akan di-override oleh text-left/right di HTML) */
             padding: 0; 
         }
         .icon-placeholder img {
@@ -171,7 +175,7 @@
             position: relative;
             width: 200px; 
             height: 150px; 
-            background-image: url('https://placehold.co/200x150/FFD700/FFFFFF?text=Camera'); 
+            background-image: url('icons/polaroi.png'); /* Menggunakan gambar polaroi.png */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -223,8 +227,8 @@
     <header class="w-full max-w-4xl bg-transparent p-3 sm:p-5 rounded-2xl shadow-none flex justify-between items-center mb-4">
         <!-- Icon Aku -->
         <div class="flex items-center">
-            <!-- Menggunakan jalur lokal untuk aku.png dan ukuran 50px -->
-            <img src="icons/aku.png" alt="Aku Icon" class="w-[50px] h-[50px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/50x50/d1d5db/4b5563?text=Aku';">
+            <!-- Menggunakan jalur lokal untuk aku.png dan ukuran 60px -->
+            <img src="icons/aku.png" alt="Aku Icon" class="w-[60px] h-[60px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/60x60/d1d5db/4b5563?text=Aku';">
         </div>
         
         <div class="text-center">
@@ -234,13 +238,13 @@
         
         <!-- Icon Kamu -->
         <div class="flex items-center">
-            <!-- Menggunakan jalur lokal untuk kamu.png dan ukuran 50px -->
-            <img src="icons/kamu.png" alt="Kamu Icon" class="w-[50px] h-[50px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/50x50/d1d5db/4b5563?text=Kamu';">
+            <!-- Menggunakan jalur lokal untuk kamu.png dan ukuran 60px -->
+            <img src="icons/kamu.png" alt="Kamu Icon" class="w-[60px] h-[60px] rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/60x60/d1d5db/4b5563?text=Kamu';">
         </div>
     </header>
 
     <!-- User ID Display -->
-    <div class="w-full max-w-4xl text-right text-sm text-gray-600 mb-2">
+    <div class="w-full max-w-4xl text-right text-sm text-gray-600 mb-2 hidden"> <!-- Menyembunyikan User ID -->
         User ID: <span id="user-id-display" class="font-mono text-gray-800">Loading...</span>
         <button id="logout-button" class="ml-2 px-2 py-1 bg-red-500 text-white text-xs rounded-md hidden">Logout</button>
     </div>
@@ -249,42 +253,47 @@
     <main id="home-page" class="w-full max-w-4xl">
 
         <!-- Monitor Event (Central Board-like Card) -->
-        <div id="monitor-event-card" class="card w-full p-4" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px;">
+        <div id="monitor-event-card" class="card w-full p-4 mt-4" style="background-image: url('icons/Monitor-event.png'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 150px;">
             <h2 class="font-bold text-gray-800 mb-1">Monitor Event</h2>
+            <!-- Menghapus sub judul kedua dari Monitor Event -->
             <div id="monitor-event-content" class="text-sm sm:text-base text-gray-600">
-                Lihat semua aktivitas ataupun event yang akan dikerjakan di sini.
+                <!-- Konten akan diisi secara dinamis -->
             </div>
         </div>
 
-        <!-- Grid for Feature Cards (Keuangan, Game, Tabungan, Pasangan) -->
-        <div class="grid grid-cols-2 gap-3 w-full px-2">
+        <!-- Feature Cards Row 1 -->
+        <div class="flex w-full justify-between mt-4 px-2">
             <!-- Keuangan Card -->
-            <div id="keuangan-card" class="card">
-                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+            <div id="keuangan-card" class="card flex flex-col items-start w-1/2 pr-1"> 
+                <div class="icon-placeholder w-20 h-20 sm:w-24 sm:h-24 mb-0.5 justify-start"> <!-- Memperbesar ukuran ikon dan mengatur perataan ikon ke kiri -->
                     <img src="icons/keuangan.png" alt="Keuangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Keuangan';">
                 </div>
-                <h2 class="font-semibold text-gray-800">Keuangan</h2>
+                <h2 class="font-semibold text-gray-800 text-left">Keuangan</h2>
             </div>
             <!-- Game Card -->
-            <div id="game-card" class="card">
-                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+            <div id="game-card" class="card flex flex-col items-end w-1/2 pl-1"> <!-- Mengatur perataan teks ke kanan -->
+                <div class="icon-placeholder w-20 h-20 sm:w-24 sm:h-24 mb-0.5 justify-end"> <!-- Memperbesar ukuran ikon dan mengatur perataan ikon ke kanan -->
                     <img src="icons/Game-time.png" alt="Game Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Game';">
                 </div>
-                <h2 class="font-semibold text-gray-800">Game</h2>
+                <h2 class="font-semibold text-gray-800 text-right">Game</h2>
             </div>
+        </div>
+
+        <!-- Feature Cards Row 2 -->
+        <div class="flex w-full justify-between mt-3 px-2">
             <!-- Tabungan Card -->
-            <div id="tabungan-card" class="card">
-                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+            <div id="tabungan-card" class="card flex flex-col items-start w-1/2 pr-1"> <!-- Mengatur perataan teks ke kiri -->
+                <div class="icon-placeholder w-20 h-20 sm:w-24 sm:h-24 mb-0.5 justify-start"> <!-- Memperbesar ukuran ikon dan mengatur perataan ikon ke kiri -->
                     <img src="icons/Tabungan.png" alt="Tabungan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Tabungan';">
                 </div>
-                <h2 class="font-semibold text-gray-800">Tabungan</h2>
+                <h2 class="font-semibold text-gray-800 text-left">Tabungan</h2>
             </div>
             <!-- Pasangan Card -->
-            <div id="pasangan-card" class="card">
-                <div class="icon-placeholder w-16 h-16 sm:w-20 sm:h-20 mb-0.5">
+            <div id="pasangan-card" class="card flex flex-col items-end w-1/2 pl-1"> <!-- Mengatur perataan teks ke kanan -->
+                <div class="icon-placeholder w-20 h-20 sm:w-24 sm:h-24 mb-0.5 justify-end"> <!-- Memperbesar ukuran ikon dan mengatur perataan ikon ke kanan -->
                     <img src="icons/pasangan.png" alt="Pasangan Icon" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/64x64/d1d5db/4b5563?text=Pasangan';">
                 </div>
-                <h2 class="font-semibold text-gray-800">Pasangan</h2>
+                <h2 class="font-semibold text-gray-800 text-right">Pasangan</h2>
             </div>
         </div>
     </main>
@@ -384,8 +393,11 @@
         <div class="w-full max-w-md space-y-4">
             <h3 class="font-bold text-gray-800">Profil Pasangan</h3>
             <div class="flex flex-col items-center space-y-2">
-                <img src="icons/kamu.png" alt="Profil Kamu" class="w-24 h-24 rounded-full object-cover border-2 border-indigo-500" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e0e7ff/4338ca?text=Kamu';">
-                <p class="text-lg font-semibold text-gray-800">Nama Kamu</p>
+                <img id="partner-profile-pic" src="icons/kamu.png" alt="Profil Kamu" class="w-24 h-24 rounded-full object-cover border-2 border-indigo-500" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e0e7ff/4338ca?text=Kamu';">
+                <input type="file" id="partner-profile-pic-upload" accept="image/*" class="hidden">
+                <button id="change-partner-pic-btn" class="text-sm text-blue-600 hover:underline mt-1">Ubah Foto</button>
+                <input type="text" id="partner-nickname-input" placeholder="Nama Panggilan Kamu" class="w-full p-2 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-2">
+                <button id="save-partner-nickname-btn" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors">Simpan Nama Panggilan</button>
                 <p class="text-sm text-gray-600">ID Pengguna: <span id="partner-user-id">Belum Terhubung</span></p>
             </div>
             <h3 class="font-bold text-gray-800 mt-6">Kelola Ruangan Pasangan</h3>
@@ -670,6 +682,8 @@
         let userId;
         let isAuthReady = false; // Flag to ensure auth is ready before Firestore ops
         let unsubscribeCoupleRoom = null; // To store the unsubscribe function for couple room listener
+        let unsubscribeEvents = null; // Unsubscribe for events listener
+        let unsubscribeWishlist = null; // Unsubscribe for wishlist listener
 
         // Firebase SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -694,7 +708,7 @@
 
         // Get feature cards (top section)
         const keuanganCard = document.getElementById('keuangan-card');
-        const tabunganCard = document.getElementById('tabungan-card'); // Corrected
+        const tabunganCard = document.getElementById('tabungan-card'); 
         const gameCard = document.getElementById('game-card');
         const pasanganCard = document.getElementById('pasangan-card');
 
@@ -745,7 +759,7 @@
 
         // Get Habits page elements
         const habitNameInput = document.getElementById('habit-name');
-        const addHabitBtn = document.getElementById('add-habit-btn'); // Corrected
+        const addHabitBtn = document.getElementById('add-habit-btn'); 
         const habitsTableBody = document.getElementById('habits-table-body');
 
         let habits = []; // This will be populated by Firestore listener
@@ -791,6 +805,11 @@
         let isLoginMode = true; // State for login/register form
 
         // Get Pasangan page elements
+        const partnerProfilePic = document.getElementById('partner-profile-pic');
+        const partnerProfilePicUpload = document.getElementById('partner-profile-pic-upload');
+        const changePartnerPicBtn = document.getElementById('change-partner-pic-btn');
+        const partnerNicknameInput = document.getElementById('partner-nickname-input');
+        const savePartnerNicknameBtn = document.getElementById('save-partner-nickname-btn');
         const partnerUserIdSpan = document.getElementById('partner-user-id');
         const coupleRoomIdInput = document.getElementById('couple-room-id-input');
         const createRoomBtn = document.getElementById('create-room-btn');
@@ -814,6 +833,8 @@
                     if (user) {
                         userId = user.uid;
                         document.getElementById('user-id-display').textContent = userId;
+                        // Sembunyikan User ID display
+                        document.getElementById('user-id-display').parentElement.classList.add('hidden');
                         isAuthReady = true;
                         logoutButton.classList.remove('hidden'); // Show logout button
                         console.log("Firebase initialized and user authenticated:", userId);
@@ -826,6 +847,8 @@
                     } else {
                         userId = null;
                         document.getElementById('user-id-display').textContent = 'Not Authenticated';
+                        // Sembunyikan User ID display
+                        document.getElementById('user-id-display').parentElement.classList.add('hidden');
                         isAuthReady = false;
                         logoutButton.classList.add('hidden'); // Hide logout button
                         console.log("User not authenticated.");
@@ -834,6 +857,14 @@
                         if (unsubscribeCoupleRoom) {
                             unsubscribeCoupleRoom();
                             unsubscribeCoupleRoom = null;
+                        }
+                        if (unsubscribeEvents) {
+                            unsubscribeEvents();
+                            unsubscribeEvents = null;
+                        }
+                        if (unsubscribeWishlist) {
+                            unsubscribeWishlist();
+                            unsubscribeWishlist = null;
                         }
                     }
                 });
@@ -856,6 +887,7 @@
             } catch (error) {
                 console.error("Error initializing Firebase or authenticating:", error);
                 document.getElementById('user-id-display').textContent = 'Error loading user ID';
+                document.getElementById('user-id-display').parentElement.classList.add('hidden'); // Sembunyikan User ID display
                 window.showModal('Terjadi kesalahan saat memuat aplikasi. Mohon coba lagi.');
                 window.showPage('auth-page'); // Fallback to auth page on init error
             }
@@ -901,13 +933,14 @@
 
             // Firestore listener for Events (Kalender)
             const eventsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/events`);
-            onSnapshot(query(eventsCollectionRef), (snapshot) => {
+            unsubscribeEvents = onSnapshot(query(eventsCollectionRef), (snapshot) => {
                 events = [];
                 snapshot.forEach(doc => {
                     events.push({ id: doc.id, ...doc.data() });
                 });
                 renderCalendar();
                 renderEventList();
+                updateMonitorEventContentFromData(); // Update monitor event
             }, (error) => {
                 console.error("Error fetching events:", error);
                 window.showModal('Gagal memuat data event. Silakan coba lagi.');
@@ -929,13 +962,14 @@
 
             // Firestore listener for Wishlist
             const wishlistCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/wishlist`);
-            onSnapshot(query(wishlistCollectionRef), (snapshot) => {
+            unsubscribeWishlist = onSnapshot(query(wishlistCollectionRef), (snapshot) => {
                 wishlistItems = [];
                 snapshot.forEach(doc => {
                     wishlistItems.push({ id: doc.id, ...doc.data() });
                 });
                 renderWishlistItems();
                 updateDashboardWishlist(); // Update dashboard
+                updateMonitorEventContentFromData(); // Update monitor event
             }, (error) => {
                 console.error("Error fetching wishlist items:", error);
                 window.showModal('Gagal memuat daftar keinginan. Silakan coba lagi.');
@@ -944,10 +978,17 @@
             // Listener for user's own profile to get coupleRoomId
             const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile/data`);
             onSnapshot(userProfileRef, (docSnap) => {
-                if (docSnap.exists() && docSnap.data().coupleRoomId) {
-                    const roomData = docSnap.data();
-                    const newCoupleRoomId = roomData.coupleRoomId;
-                    if (newCoupleRoomId !== currentCoupleRoomId) {
+                if (docSnap.exists()) {
+                    const profileData = docSnap.data();
+                    partnerNicknameInput.value = profileData.nickname || '';
+                    if (profileData.profilePicUrl) {
+                        partnerProfilePic.src = profileData.profilePicUrl;
+                    } else {
+                        partnerProfilePic.src = 'icons/kamu.png'; // Default if no custom pic
+                    }
+
+                    const newCoupleRoomId = profileData.coupleRoomId;
+                    if (newCoupleRoomId && newCoupleRoomId !== currentCoupleRoomId) {
                         currentCoupleRoomId = newCoupleRoomId;
                         console.log("User's couple room ID updated:", currentCoupleRoomId);
                         // If there was a previous listener, unsubscribe it
@@ -956,17 +997,25 @@
                         }
                         // Set up new listener for the actual couple room data
                         setupCoupleRoomListener(currentCoupleRoomId);
+                    } else if (!newCoupleRoomId && currentCoupleRoomId) {
+                        // User left a room
+                        currentCoupleRoomId = null;
+                        currentPartnerId = null;
+                        roomStatusSpan.textContent = 'Tidak Terhubung';
+                        partnerUserIdSpan.textContent = 'Belum Terhubung';
+                        if (unsubscribeCoupleRoom) {
+                            unsubscribeCoupleRoom();
+                            unsubscribeCoupleRoom = null;
+                        }
                     }
                 } else {
-                    // User is not in a couple room
+                    // Profile document doesn't exist, initialize default values
+                    partnerNicknameInput.value = '';
+                    partnerProfilePic.src = 'icons/kamu.png';
                     currentCoupleRoomId = null;
                     currentPartnerId = null;
                     roomStatusSpan.textContent = 'Tidak Terhubung';
                     partnerUserIdSpan.textContent = 'Belum Terhubung';
-                    if (unsubscribeCoupleRoom) {
-                        unsubscribeCoupleRoom();
-                        unsubscribeCoupleRoom = null;
-                    }
                 }
             }, (error) => {
                 console.error("Error fetching user profile:", error);
@@ -984,23 +1033,39 @@
                 unsubscribeCoupleRoom();
             }
 
-            unsubscribeCoupleRoom = onSnapshot(coupleRoomRef, (docSnap) => {
+            unsubscribeCoupleRoom = onSnapshot(coupleRoomRef, async (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     roomStatusSpan.textContent = `Terhubung ke Ruangan: ${docSnap.id}`;
                     
+                    let displayedPartnerId = 'Belum Terhubung';
                     if (data.creatorId === userId) {
                         currentPartnerId = data.partnerId;
-                        partnerUserIdSpan.textContent = data.partnerId ? `Pasangan: ${data.partnerId}` : 'Menunggu pasangan...';
+                        if (data.partnerId) {
+                            // Fetch partner's nickname if available
+                            const partnerProfileDoc = await getDoc(doc(db, `artifacts/${appId}/users/${data.partnerId}/profile/data`));
+                            if (partnerProfileDoc.exists() && partnerProfileDoc.data().nickname) {
+                                displayedPartnerId = `Pasangan: ${partnerProfileDoc.data().nickname} (${data.partnerId})`;
+                            } else {
+                                displayedPartnerId = `Pasangan: ${data.partnerId}`;
+                            }
+                        } else {
+                            displayedPartnerId = 'Menunggu pasangan...';
+                        }
                     } else if (data.partnerId === userId) {
                         currentPartnerId = data.creatorId;
-                        partnerUserIdSpan.textContent = `Pasangan: ${data.creatorId}`;
+                        // Fetch creator's nickname if available
+                        const creatorProfileDoc = await getDoc(doc(db, `artifacts/${appId}/users/${data.creatorId}/profile/data`));
+                        if (creatorProfileDoc.exists() && creatorProfileDoc.data().nickname) {
+                            displayedPartnerId = `Pasangan: ${creatorProfileDoc.data().nickname} (${data.creatorId})`;
+                        } else {
+                            displayedPartnerId = `Pasangan: ${data.creatorId}`;
+                        }
                     } else {
-                        // This case should ideally not happen if user's profile is correct
                         partnerUserIdSpan.textContent = 'Tidak Terhubung (Bukan anggota ruangan)';
                         currentPartnerId = null;
                     }
-                    // You would load/render shared data from this room here
+                    partnerUserIdSpan.textContent = displayedPartnerId;
                     console.log("Couple Room Data:", data);
                 } else {
                     currentCoupleRoomId = null;
@@ -1008,6 +1073,9 @@
                     roomStatusSpan.textContent = 'Tidak Terhubung';
                     partnerUserIdSpan.textContent = 'Belum Terhubung';
                     window.showModal('Anda telah keluar dari ruangan pasangan atau ruangan tidak ada.');
+                    // Also clear coupleRoomId from user's profile if room no longer exists
+                    const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile/data`);
+                    await updateDoc(userProfileRef, { coupleRoomId: null });
                 }
             }, (error) => {
                 console.error("Error fetching couple room data:", error);
@@ -1081,7 +1149,7 @@
                 document.getElementById('user-id-display').parentElement.classList.add('hidden');
                 logoutButton.classList.add('hidden');
             } else {
-                document.getElementById('user-id-display').parentElement.classList.remove('hidden');
+                // User ID display is now always hidden, only logout button visibility depends on auth state
                 if (auth.currentUser) {
                     logoutButton.classList.remove('hidden');
                 }
@@ -1114,10 +1182,46 @@
         });
 
         // Function to update main content (Monitor Event) - now only used for initial load or if explicitly needed
-        function updateMonitorEventContent(title, content) {
-            monitorEventTitle.textContent = title;
-            monitorEventContent.textContent = content;
+        // Updated to display real-time data from events and wishlist
+        function updateMonitorEventContentFromData() {
+            let content = '';
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            const todayFormatted = today.toISOString().split('T')[0];
+            const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+
+            // Upcoming events
+            const upcomingEvents = events.filter(event => new Date(event.date) >= today).sort((a, b) => new Date(a.date) - new Date(b.date));
+            if (upcomingEvents.length > 0) {
+                content += 'Event Mendatang:<br>';
+                upcomingEvents.slice(0, 3).forEach(event => { // Show up to 3 upcoming events
+                    content += `• ${event.name} (${new Date(event.date).toLocaleDateString('id-ID')})<br>`;
+                });
+                if (upcomingEvents.length > 3) {
+                    content += `... dan ${upcomingEvents.length - 3} lainnya.<br>`;
+                }
+            }
+
+            // Unfulfilled wishlist items
+            const unfulfilledWishlist = wishlistItems.filter(item => !item.fulfilled);
+            if (unfulfilledWishlist.length > 0) {
+                if (content !== '') content += '<br>'; // Add a line break if there are events
+                content += 'Wishlist Belum Terpenuhi:<br>';
+                unfulfilledWishlist.slice(0, 3).forEach(item => { // Show up to 3 unfulfilled items
+                    content += `• ${item.name}${item.price ? ` (${formatCurrency(item.price)})` : ''}<br>`;
+                });
+                if (unfulfilledWishlist.length > 3) {
+                    content += `... dan ${unfulfilledWishlist.length - 3} lainnya.<br>`;
+                }
+            }
+
+            if (content === '') {
+                content = 'Belum ada aktivitas atau keinginan yang perlu dimonitor.';
+            }
+            monitorEventContent.innerHTML = content;
         }
+
 
         // --- Keuangan Feature Logic ---
         function formatCurrency(amount) {
@@ -1844,6 +1948,61 @@
         });
 
         // --- Couple Room Logic (Pasangan Feature) ---
+        // Change partner profile picture
+        changePartnerPicBtn.addEventListener('click', () => {
+            if (!isAuthReady || !userId) {
+                window.showModal('Mohon login terlebih dahulu.');
+                return;
+            }
+            partnerProfilePicUpload.click();
+        });
+
+        partnerProfilePicUpload.addEventListener('change', async () => {
+            if (partnerProfilePicUpload.files.length > 0) {
+                const file = partnerProfilePicUpload.files[0];
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const imageUrl = e.target.result;
+                    // For now, we'll just update the image source.
+                    // In a real app, you'd upload this to Firebase Storage and save the URL to Firestore.
+                    partnerProfilePic.src = imageUrl;
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile/data`);
+                    try {
+                        await setDoc(userProfileRef, { profilePicUrl: imageUrl }, { merge: true });
+                        window.showModal('Foto profil berhasil diubah (simulasi)!');
+                    } catch (e) {
+                        console.error("Error updating profile picture:", e);
+                        window.showModal('Gagal mengubah foto profil. Silakan coba lagi.');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save partner nickname
+        savePartnerNicknameBtn.addEventListener('click', async () => {
+            if (!isAuthReady || !userId) {
+                window.showModal('Mohon login terlebih dahulu.');
+                return;
+            }
+            const nickname = partnerNicknameInput.value.trim();
+            if (!nickname) {
+                window.showModal('Nama panggilan tidak boleh kosong.');
+                return;
+            }
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile/data`);
+            try {
+                await setDoc(userProfileRef, { nickname: nickname }, { merge: true });
+                window.showModal('Nama panggilan berhasil disimpan!');
+            } catch (e) {
+                console.error("Error saving nickname:", e);
+                window.showModal('Gagal menyimpan nama panggilan. Silakan coba lagi.');
+            }
+        });
+
+
         createRoomBtn.addEventListener('click', async () => {
             console.log("Create Room button clicked.");
             if (!isAuthReady || !userId) {
@@ -1942,7 +2101,7 @@
         window.addEventListener('load', () => {
             console.log("Window loaded.");
             // onAuthStateChanged will handle initial page display
-            updateMonitorEventContent('Monitor Event', 'Lihat semua aktivitas.');
+            updateMonitorEventContentFromData(); // Initial call to populate Monitor Event
         });
 
         // Event Listeners for Footer Navigation (now navigate to specific pages)
