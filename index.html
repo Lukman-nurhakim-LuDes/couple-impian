@@ -317,9 +317,6 @@
             </div>
             <h2 class="text-lg font-semibold text-gray-800">Pasangan</h2>
         </div>
-
-        <!-- Menghapus elemen money-bag-img dan couple-illustration-img -->
-        <!-- Karena Anda mengkonfirmasi tidak ada gambar asli untuk ini dan tidak menginginkan placeholder -->
     </main>
 
     <!-- Keuangan Page -->
@@ -392,7 +389,7 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Game Seru</h2>
         <p class="text-base sm:text-lg text-gray-700 mb-6">Mainkan game interaktif bersama pasangan untuk mempererat hubungan dan menciptakan momen tak terlupakan.</p>
         <!-- Add more specific content for Game feature here -->
-        <p class="text-gray-600 mt-4">Konten game akan ditambahkan di sini!</p>
+        <button onclick="showModal('Game baru akan segera dimulai!')" class="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Mulai Game Baru</button>
         <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
     </div>
 
@@ -401,7 +398,7 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">Hubungan Harmonis</h2>
         <p class="text-base sm:text-lg text-gray-700 mb-6">Fitur ini membantu Anda menjaga komunikasi dan keharmonisan dalam hubungan. Temukan ide kencan, tantangan pasangan, dan lainnya!</p>
         <!-- Add more specific content for Pasangan feature here -->
-        <p class="text-gray-600 mt-4">Konten fitur pasangan akan ditambahkan di sini!</p>
+        <button onclick="showModal('Dapatkan ide kencan baru!')" class="mt-4 px-6 py-3 bg-pink-600 text-white rounded-lg shadow hover:bg-pink-700 transition-colors">Ide Kencan Baru</button>
         <button onclick="showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
     </div>
 
@@ -1130,7 +1127,7 @@
                 console.error("Error deleting saving goal: ", e);
                 showModal('Gagal menghapus tujuan tabungan. Silakan coba lagi.');
             }
-        });
+        }
 
         addSavingGoalBtn.addEventListener('click', async () => {
             const name = savingGoalNameInput.value.trim();
@@ -1290,7 +1287,7 @@
                 console.error("Error deleting event: ", e);
                 showModal('Gagal menghapus event. Silakan coba lagi.');
             }
-        });
+        }
 
         // --- Habits Feature Logic ---
         function renderHabitsTable() {
@@ -1384,7 +1381,7 @@
                     showModal('Gagal memperbarui status kebiasaan. Silakan coba lagi.');
                 }
             }
-        }
+        });
 
         async function deleteHabit(habitId) {
             if (!isAuthReady || !userId) {
@@ -1618,3 +1615,91 @@
     </script>
 </body>
 </html>
+```
+Berikut adalah pembaruan pada Service Worker Anda:
+
+
+```javascript
+// Nama cache untuk aplikasi Anda
+const CACHE_NAME = 'couple-growup-cache-v1';
+
+// Daftar URL aset yang akan di-cache
+// Pastikan nama file ini sesuai persis dengan yang ada di folder 'icons' Anda (termasuk huruf besar/kecil dan spasi)
+const urlsToCache = [
+    '/',
+    '/index.html',
+    '/icons/aku.png',
+    '/icons/Background.jpg',
+    '/icons/Kalender.png',
+    '/icons/Dasbor.png',
+    '/icons/Game-time.png',
+    '/icons/Habits.png',
+    '/icons/keuangan.png',
+    '/icons/Monitor-event.png',
+    '/icons/pasangan.png',
+    '/icons/pic drop.png',
+    '/icons/Tabungan.png',
+    '/icons/Wishlist.png',
+    '/icons/icon-192.png',
+    '/icons/icon-512.png',
+    '/icons/kamu.png',
+    // URL CDN eksternal yang juga perlu di-cache
+    'https://cdn.tailwindcss.com',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
+];
+
+// Event 'install' Service Worker: Menginstal Service Worker dan membuka cache
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                console.log('Service Worker: Cache dibuka');
+                // Menambahkan semua aset ke cache
+                return cache.addAll(urlsToCache);
+            })
+            .catch((error) => {
+                console.error('Service Worker: Gagal menambahkan aset ke cache selama instalasi:', error);
+            })
+    );
+});
+
+// Event 'fetch' Service Worker: Mencegat permintaan jaringan
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then((response) => {
+                // Jika ada di cache, kembalikan respons dari cache
+                if (response) {
+                    return response;
+                }
+                // Jika tidak ada di cache, coba ambil dari jaringan
+                return fetch(event.request).catch(() => {
+                    // Jika jaringan tidak tersedia atau gagal, berikan fallback
+                    // Untuk permintaan navigasi (misalnya, memuat halaman HTML), kembalikan index.html
+                    if (event.request.mode === 'navigate') {
+                        return caches.match('/index.html'); // Atau halaman offline.html khusus
+                    }
+                    // Untuk aset lain, berikan respons error
+                    return new Response('Kesalahan jaringan atau konten tidak ditemukan.', { status: 404 });
+                });
+            })
+    );
+});
+
+// Event 'activate' Service Worker: Mengaktifkan Service Worker dan membersihkan cache lama
+self.addEventListener('activate', (event) => {
+    const cacheWhitelist = [CACHE_NAME]; // Daftar cache yang valid saat ini
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    // Hapus cache yang tidak ada dalam daftar putih (whitelist)
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        console.log('Service Worker: Menghapus cache lama:', cacheName);
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
