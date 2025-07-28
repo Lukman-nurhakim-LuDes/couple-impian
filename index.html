@@ -432,7 +432,11 @@
                 <button id="change-partner-pic-btn" class="text-sm text-blue-600 hover:underline mt-1">Ubah Foto</button>
                 <input type="text" id="partner-nickname-input" placeholder="Nama Panggilan Kamu" class="w-full p-2 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-2">
                 <button id="save-partner-nickname-btn" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors">Simpan Nama Panggilan</button>
-                <p class="text-sm text-gray-600">ID Pengguna: <span id="partner-user-id">Belum Terhubung</span></p>
+                <div class="flex items-center text-sm text-gray-600">
+                    User ID: <span id="user-id-display" class="font-mono text-gray-800 ml-1">Loading...</span>
+                    <button id="toggle-user-id-btn" class="ml-2 px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded-md">Tampilkan/Sembunyikan ID</button>
+                </div>
+                <p class="text-sm text-gray-600">ID Pasangan: <span id="partner-user-id">Belum Terhubung</span></p>
                 <button id="logout-button" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors">Logout</button> <!-- Tombol logout dipindahkan ke sini -->
             </div>
             <h3 class="font-bold text-gray-800 mt-6">Kelola Ruangan Pasangan</h3>
@@ -873,6 +877,8 @@
         const createRoomBtn = document.getElementById('create-room-btn');
         const joinRoomBtn = document.getElementById('join-room-btn');
         const roomStatusSpan = document.getElementById('room-status');
+        const toggleUserIdBtn = document.getElementById('toggle-user-id-btn'); // Tombol toggle User ID
+        const userIdDisplayContainer = document.querySelector('.flex.items-center.text-sm.text-gray-600'); // Container User ID
 
         let currentCoupleRoomId = null; // To store the active couple room ID
         let currentPartnerId = null; // To store the partner's ID
@@ -895,9 +901,8 @@
                             await signOut(auth); // Sign out anonymous user
                             userId = null;
                             isAuthReady = false;
-                            const userIdDisplayElement = document.getElementById('user-id-display');
-                            if (userIdDisplayElement) { // Null check added here
-                                userIdDisplayElement.parentElement.classList.add('hidden');
+                            if (userIdDisplayContainer) { // Null check added here
+                                userIdDisplayContainer.classList.add('hidden');
                             }
                             logoutButton.classList.add('hidden');
                             window.showPage('auth-page');
@@ -909,8 +914,13 @@
                         const userIdDisplayElement = document.getElementById('user-id-display');
                         if (userIdDisplayElement) { // Null check added here
                             userIdDisplayElement.textContent = userId;
-                            userIdDisplayElement.parentElement.classList.add('hidden'); // Sembunyikan User ID display
+                            // userIdDisplayElement.parentElement.classList.add('hidden'); // Awalnya sembunyikan, akan di-toggle
                         }
+                        // Sembunyikan User ID secara default saat login, bisa di-toggle nanti
+                        if (userIdDisplayContainer) {
+                            userIdDisplayContainer.classList.add('hidden');
+                        }
+
                         isAuthReady = true;
                         logoutButton.classList.remove('hidden'); // Show logout button
                         console.log("Firebase initialized and user authenticated:", userId);
@@ -926,7 +936,10 @@
                         const userIdDisplayElement = document.getElementById('user-id-display');
                         if (userIdDisplayElement) { // Null check added here
                             userIdDisplayElement.textContent = 'Not Authenticated';
-                            userIdDisplayElement.parentElement.classList.add('hidden'); // Sembunyikan User ID display
+                            // userIdDisplayElement.parentElement.classList.add('hidden'); // Pastikan tersembunyi
+                        }
+                        if (userIdDisplayContainer) {
+                            userIdDisplayContainer.classList.add('hidden');
                         }
                         isAuthReady = false;
                         logoutButton.classList.add('hidden'); // Hide logout button
@@ -1230,13 +1243,12 @@
 
             // Special handling for auth page: hide user ID and logout button
             if (pageId === 'auth-page') {
-                const userIdDisplayElement = document.getElementById('user-id-display');
-                if (userIdDisplayElement) { // Null check added here
-                    userIdDisplayElement.parentElement.classList.add('hidden');
+                if (userIdDisplayContainer) {
+                    userIdDisplayContainer.classList.add('hidden');
                 }
                 logoutButton.classList.add('hidden');
             } else {
-                // User ID display is now always hidden, only logout button visibility depends on auth state
+                // User ID display is now always hidden by default, only logout button visibility depends on auth state
                 if (auth.currentUser) {
                     logoutButton.classList.remove('hidden');
                 }
@@ -2169,6 +2181,13 @@
         });
 
         // --- Couple Room Logic (Pasangan Feature) ---
+        // Toggle User ID visibility
+        toggleUserIdBtn.addEventListener('click', () => {
+            if (userIdDisplayContainer) {
+                userIdDisplayContainer.classList.toggle('hidden');
+            }
+        });
+
         // Change partner profile picture
         changePartnerPicBtn.addEventListener('click', () => {
             if (!isAuthReady || !userId) {
