@@ -222,33 +222,234 @@
             }
         }
 
-        /* Jigsaw Puzzle Game Styles */
-        .puzzle-container {
+        /* Game Page Styles */
+        .game-background {
+            background: linear-gradient(to bottom right, #ff7e5f, #feb47b); /* Romantic gradient */
+            animation: pulseBackground 10s infinite alternate;
+        }
+        @keyframes pulseBackground {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* Game Selection & Category Cards */
+        .game-selection-card {
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 1rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-selection-card:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+        .game-selection-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Kiss or Dare Specific Styles */
+        .category-card {
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 1rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .category-card:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .dare-card-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            margin: 2rem auto;
+        }
+        .dare-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 1rem;
+        }
+        .dare-card.flipped {
+            transform: rotateY(180deg);
+        }
+        .dare-card-front, .dare-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+        .dare-card-front {
+            background: linear-gradient(to top left, #a200ff, #ff007f); /* Purple-Pink */
+            z-index: 2;
+        }
+        .dare-card-back {
+            background: linear-gradient(to bottom right, #00c6ff, #0072ff); /* Blue */
+            transform: rotateY(180deg);
+        }
+
+        .spinner-wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            position: relative;
+            overflow: hidden;
+            margin: 2rem auto;
+            background-color: #eee;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .spinner-segment {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 50%;
+            transform-origin: 0% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .spinner-pointer {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid #ff0000;
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .spinner-wheel.spinning {
+            animation: spin 3s ease-out forwards;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(var(--final-rotation)); }
+        }
+
+        /* Snakes and Ladders Specific Styles */
+        .board-grid {
             display: grid;
-            border: 2px solid #ccc;
-            background-color: #e0e0e0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; /* For absolute positioning of pieces */
+            grid-template-columns: repeat(10, 1fr);
+            width: 100%;
+            max-width: 500px; /* Adjust as needed */
+            aspect-ratio: 1 / 1; /* Keep square */
+            border: 2px solid #333;
+            background-color: #f0f0f0;
+            margin: 1rem auto;
+            position: relative;
         }
-        .puzzle-piece {
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #f0f0f0;
+        .board-cell {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #555;
             box-sizing: border-box;
-            cursor: grab;
-            position: absolute; /* Allow drag-and-drop */
-            transition: box-shadow 0.1s ease-in-out, z-index 0.1s ease-in-out;
-            touch-action: none; /* Prevent browser default touch actions */
+            background-color: #fff;
         }
-        .puzzle-piece.dragging {
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            z-index: 100;
-            cursor: grabbing;
+        .board-cell.odd {
+            background-color: #e6e6e6;
         }
-        .puzzle-piece.correct {
-            border: 1px solid #4CAF50; /* Green border for correct placement */
-            box-shadow: 0 0 5px #4CAF50;
-            cursor: default;
+        .player-token {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: blue; /* Player 1 default */
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: all 0.5s ease-in-out;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+            font-weight: bold;
+        }
+        .player-token.player2 {
+            background-color: red; /* Player 2 default */
+        }
+
+        /* Question/Punishment Pop-up for Snakes and Ladders */
+        .game-question-modal {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        .game-question-modal h3 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .game-question-modal p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        .game-question-modal input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .game-question-modal button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
     </style>
 </head>
@@ -402,21 +603,113 @@
     </div>
 
     <!-- Game Page -->
-    <div id="game-page" class="hidden-page w-full max-w-4xl p-6 sm:p-8 bg-white rounded-2xl shadow-md mb-8 flex flex-col items-center text-center">
-        <h1 class="text-3xl font-bold text-indigo-700 mb-6">Jigsaw Puzzle Foto Kenangan</h1>
+    <div id="game-page" class="hidden-page w-full min-h-screen flex flex-col items-center justify-center p-4 game-background">
+        <div class="game-container bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg text-center relative">
+            <h1 class="text-4xl font-bold text-white mb-6">Pilih Game</h1>
+            <div id="game-selection-screen" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button id="select-kiss-or-dare" class="game-selection-card">
+                    <img src="https://placehold.co/80x80/FF7E5F/FFFFFF?text=Kiss" alt="Kiss or Dare Icon">
+                    <span>Kiss or Dare</span>
+                </button>
+                <button id="select-snakes-ladders" class="game-selection-card">
+                    <img src="https://placehold.co/80x80/00C6FF/FFFFFF?text=Ular" alt="Snakes and Ladders Icon">
+                    <span>Ular Tangga</span>
+                </button>
+            </div>
 
-        <div class="mb-4 w-full max-w-md flex flex-col items-center space-y-3">
-            <input type="file" id="puzzleImageInput" accept="image/*" class="hidden">
-            <button id="selectImageBtn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Pilih Foto Puzzle</button>
-            <button id="startGameBtn" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors hidden">Mulai Puzzle</button>
+            <!-- Kiss or Dare Game Area -->
+            <div id="kiss-or-dare-game-area" class="hidden">
+                <h1 class="text-4xl font-bold text-white mb-6">Kiss or Dare!</h1>
+                <div id="kiss-or-dare-category-selection">
+                    <h3 class="text-2xl font-semibold text-white mb-4">Pilih Kategori:</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="category-card px-4 py-2" data-category="Romantis">Romantis</button>
+                        <button class="category-card px-4 py-2" data-category="Lucu">Lucu</button>
+                        <button class="category-card px-4 py-2" data-category="Berani">Berani</button>
+                        <button class="category-card px-4 py-2" data-category="Kenangan">Kenangan</button>
+                        <button class="category-card px-4 py-2" data-category="Impian">Impian</button>
+                    </div>
+                </div>
+
+                <div id="kiss-or-dare-play-area" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-left">
+                            <p class="text-white text-lg">Skor Kamu: <span id="player1ScoreKissDare" class="font-bold">0</span></p>
+                            <p class="text-white text-lg">Skor Pasangan: <span id="player2ScoreKissDare" class="font-bold">0</span></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-white text-lg">Giliran: <span id="currentPlayerKissDare" class="font-bold">Pemain 1</span></p>
+                        </div>
+                    </div>
+                    <div class="dare-card-container">
+                        <div id="dareCard" class="dare-card">
+                            <div class="dare-card-front flex flex-col justify-center items-center">
+                                <p class="text-white">Ketuk untuk Tantangan!</p>
+                                <p class="text-sm text-white opacity-80 mt-2">(Kategori: <span id="currentCategoryName"></span>)</p>
+                            </div>
+                            <div class="dare-card-back flex flex-col justify-center items-center">
+                                <p id="dareText" class="text-white"></p>
+                                <div class="flex space-x-4 mt-4">
+                                    <button id="completeDareBtn" class="px-4 py-2 bg-green-500 text-white rounded-full text-sm">Selesai</button>
+                                    <button id="spinPunishmentBtn" class="px-4 py-2 bg-red-500 text-white rounded-full text-sm">Lewati (Hukuman)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="nextTurnKissDareBtn" class="px-6 py-3 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition-colors hidden">Giliran Selanjutnya</button>
+                </div>
+            </div>
+
+            <!-- Snakes and Ladders Game Area -->
+            <div id="snakes-ladders-game-area" class="hidden">
+                <h1 class="text-4xl font-bold text-white mb-6">Ular Tangga!</h1>
+                <div class="flex justify-between items-center mb-4 w-full max-w-md">
+                    <div class="text-left">
+                        <p class="text-white text-lg">Skor Kamu: <span id="player1ScoreSL" class="font-bold">0</span></p>
+                        <p class="text-white text-lg">Skor Pasangan: <span id="player2ScoreSL" class="font-bold">0</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-white text-lg">Giliran: <span id="currentPlayerSL" class="font-bold">Pemain 1</span></p>
+                        <p class="text-white text-lg">Dadu: <span id="diceRollResult" class="font-bold"></span></p>
+                    </div>
+                </div>
+
+                <div id="boardGrid" class="board-grid">
+                    <!-- Board cells will be generated by JS -->
+                </div>
+
+                <button id="rollDiceBtn" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Gulir Dadu</button>
+            </div>
+
+            <button onclick="window.showPage('home-page')" class="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors">Kembali ke Beranda</button>
         </div>
 
-        <div id="puzzleArea" class="relative">
-            <canvas id="puzzleCanvas" class="border-2 border-gray-300 bg-gray-100 rounded-lg shadow-inner"></canvas>
-            <div id="puzzlePiecesContainer" class="absolute top-0 left-0"></div>
+        <!-- Punishment Spinner Modal (shared) -->
+        <div id="punishmentModal" class="modal-overlay hidden">
+            <div class="modal-content bg-white p-6 rounded-2xl relative">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Hukuman!</h3>
+                <div class="spinner-wheel-container relative w-64 h-64 mx-auto">
+                    <div id="spinnerWheel" class="spinner-wheel">
+                        <!-- Segments will be generated by JS -->
+                    </div>
+                    <div class="spinner-pointer"></div>
+                </div>
+                <button id="spinWheelBtn" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Putar Roda Hukuman</button>
+                <p id="punishmentResult" class="text-lg font-semibold text-gray-800 mt-4 hidden">Hukuman: <span class="text-red-600"></span></p>
+                <button id="closePunishmentModalBtn" class="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors hidden">Tutup</button>
+            </div>
         </div>
 
-        <button id="resetGameBtn" class="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors hidden">Reset Puzzle</button>
+        <!-- Game Question Modal (for Snakes and Ladders) -->
+        <div id="gameQuestionModal" class="modal-overlay hidden">
+            <div class="game-question-modal">
+                <h3 id="questionLevelTitle">Pertanyaan Level 1</h3>
+                <p id="questionText"></p>
+                <input type="text" id="answerInput" placeholder="Jawaban Anda..." class="mb-4">
+                <button id="submitAnswerBtn" class="bg-blue-500 text-white hover:bg-blue-600">Jawab</button>
+                <button id="skipQuestionBtn" class="bg-gray-400 text-white hover:bg-gray-500 ml-2">Lewati (Hukuman)</button>
+            </div>
+        </div>
     </div>
 
     <!-- Pasangan Page -->
@@ -721,31 +1014,150 @@
         let unsubscribeSavingGoals = null; // Unsubscribe for saving goals listener
         let unsubscribeHabits = null; // Unsubscribe for habits listener
         let unsubscribeUserProfile = null; // Unsubscribe for user profile listener
+        let unsubscribeGame = null; // Unsubscribe for game data listener
 
         // Chart.js instances
         let financeLineChart = null;
         let expensePieChart = null;
 
-        // Jigsaw Puzzle Game Variables
-        const puzzleImageInput = document.getElementById('puzzleImageInput');
-        const selectImageBtn = document.getElementById('selectImageBtn');
-        const startGameBtn = document.getElementById('startGameBtn');
-        const resetGameBtn = document.getElementById('resetGameBtn');
-        const puzzleCanvas = document.getElementById('puzzleCanvas');
-        const puzzlePiecesContainer = document.getElementById('puzzlePiecesContainer');
-        const ctx = puzzleCanvas.getContext('2d');
+        // Game Selection Elements
+        const gameSelectionScreen = document.getElementById('game-selection-screen');
+        const selectKissOrDareBtn = document.getElementById('select-kiss-or-dare');
+        const selectSnakesLaddersBtn = document.getElementById('select-snakes-ladders');
 
-        let originalImage = new Image();
-        let puzzlePieces = [];
-        let rows = 3; // Default rows
-        let cols = 3; // Default columns
-        let pieceWidth, pieceHeight;
-        let puzzleAreaSize = 300; // Default size, will be responsive
+        // Kiss or Dare Game Variables
+        const kissOrDareGameArea = document.getElementById('kiss-or-dare-game-area');
+        const kissOrDareCategorySelection = document.getElementById('kiss-or-dare-category-selection');
+        const kissOrDarePlayArea = document.getElementById('kiss-or-dare-play-area');
+        const dareCard = document.getElementById('dareCard');
+        const dareText = document.getElementById('dareText');
+        const currentCategoryName = document.getElementById('currentCategoryName');
+        const completeDareBtn = document.getElementById('completeDareBtn');
+        const spinPunishmentBtn = document.getElementById('spinPunishmentBtn');
+        const nextTurnKissDareBtn = document.getElementById('nextTurnKissDareBtn'); // Renamed
+        const player1ScoreKissDareSpan = document.getElementById('player1ScoreKissDare');
+        const player2ScoreKissDareSpan = document.getElementById('player2ScoreKissDare');
+        const currentPlayerKissDareSpan = document.getElementById('currentPlayerKissDare');
 
-        let activePiece = null;
-        let currentX, currentY;
-        let initialX, initialY;
-        let xOffset = 0, yOffset = 0;
+        const categoriesKissDare = { // Renamed to avoid conflict
+            Romantis: [
+                "Berikan ciuman manis di dahi pasanganmu.", "Puji pasanganmu dengan 3 hal yang paling kamu sukai dari mereka.", "Tuliskan surat cinta singkat untuk pasanganmu dalam 1 menit.", "Ceritakan kenangan kencan pertama kalian.", "Buat janji romantis untuk masa depan bersama.",
+                "Pijat bahu pasanganmu selama 2 menit.", "Sebutkan 5 hal yang membuatmu jatuh cinta pada pasanganmu.", "Nyanyikan lagu cinta favorit kalian berdua.", "Berikan pelukan erat selama 30 detik.", "Tuliskan 3 impian bersama yang ingin kalian capai.",
+                "Sebutkan lagu yang paling menggambarkan hubungan kalian.", "Berikan gombalan yang paling romantis untuk pasanganmu.", "Tatap mata pasanganmu tanpa bicara selama 1 menit.", "Buat puisi singkat tentang cinta kalian.", "Rencanakan kencan impianmu bersama pasangan.",
+                "Berikan pujian tulus tentang penampilan pasanganmu hari ini.", "Ajak pasanganmu berdansa tanpa musik.", "Tuliskan pesan manis di telapak tangan pasanganmu.", "Ceritakan momen paling memalukan yang pernah kalian alami bersama.", "Buat daftar 3 hal yang ingin kamu lakukan untuk pasanganmu minggu ini.",
+                "Berikan ciuman di pipi pasanganmu setiap kali mereka tersenyum selama 5 menit.", "Genggam tangan pasanganmu dan ceritakan bagaimana rasanya.", "Tuliskan 'Aku Cinta Kamu' di cermin dengan lipstik atau spidol non-permanen.", "Berikan pasanganmu 'five-second hug'.", "Ceritakan hal paling romantis yang pernah pasanganmu lakukan untukmu.",
+                "Buat daftar putar lagu romantis untuk pasanganmu.", "Berikan pasanganmu pijatan kaki selama 3 menit.", "Tuliskan 3 alasan mengapa pasanganmu adalah yang terbaik.", "Ajak pasanganmu melihat bintang di malam hari (simulasi jika di dalam ruangan).", "Berikan ciuman di leher pasanganmu."
+            ],
+            Lucu: [
+                "Lakukan tarian konyol bersama pasanganmu.", "Ceritakan lelucon terburuk yang kamu tahu.", "Buat ekspresi wajah paling lucu yang kamu bisa.", "Tirukan suara binatang selama 10 detik.", "Ceritakan cerita hantu yang tidak menakutkan sama sekali.",
+                "Berjalan mundur selama 10 langkah.", "Coba sentuh hidungmu dengan lidahmu.", "Buat suara kentut dengan tanganmu.", "Berpura-pura menjadi robot selama 1 menit.", "Ceritakan hal paling konyol yang pernah kamu lakukan.",
+                "Nyanyikan lagu anak-anak dengan suara kartun.", "Berikan nama panggilan konyol untuk pasanganmu (hanya untuk game ini).", "Lakukan *moonwalk* (atau coba!).", "Berpura-pura menjadi patung selama 30 detik.", "Ceritakan mimpi paling aneh yang pernah kamu alami.",
+                "Berikan 'high five' paling canggung yang kamu bisa.", "Coba jilat sikumu.", "Buat suara tertawa paling aneh yang kamu bisa.", "Berpura-pura menjadi superhero dengan kekuatan konyol.", "Ceritakan momen paling memalukan yang pernah kamu alami sendirian.",
+                "Berikan pasanganmu 'air guitar solo'.", "Coba makan tanpa menggunakan tanganmu (jika memungkinkan dan higienis!).", "Buat suara bersin yang dramatis.", "Berpura-pura menjadi zombie selama 15 detik.", "Ceritakan hal paling lucu yang pernah kamu dengar dari anak kecil.",
+                "Berikan pasanganmu 'dad joke' yang paling buruk.", "Coba sentuh dagumu dengan lututmu (tanpa membungkuk).", "Buat suara batuk yang sangat keras dan aneh.", "Berpura-pura menjadi alien yang baru mendarat.", "Ceritakan hal paling konyol yang pernah pasanganmu lakukan."
+            ],
+            Berani: [
+                "Makan satu sendok teh bubuk kayu manis (hati-hati!).", "Telepon teman dan nyanyikan lagu selamat ulang tahun untuk mereka.", "Biarkan pasanganmu menggambar di wajahmu dengan spidol yang bisa dihapus.", "Makan sepotong bawang putih mentah.", "Tukar pakaian dengan pasanganmu (jika memungkinkan dan nyaman!).",
+                "Posting foto memalukanmu di media sosial (dan hapus setelah 5 menit).", "Biarkan pasanganmu memilih pakaianmu untuk sisa hari ini.", "Lakukan 10 *push-up* atau *sit-up*.", "Telepon orang tuamu dan katakan 'Aku mencintaimu' tanpa alasan.", "Makan satu sendung saus pedas (hati-hati!).",
+                "Berteriak dari jendela 'Aku cinta [nama pasangan]!'", "Biarkan pasanganmu mencukur sebagian kecil rambutmu (hati-hati!).", "Berjalan di luar dengan pakaian terbalik selama 5 menit.", "Makan satu sendok mustard.", "Lakukan *handstand* (atau coba!) selama 10 detik.",
+                "Biarkan pasanganmu mengikatmu ke kursi selama 5 menit.", "Makan satu sendok teh kopi bubuk.", "Tuliskan nama pasanganmu di dahimu dengan spidol yang bisa dihapus.", "Berjalan di sekitar rumah dengan mata tertutup selama 1 menit (hati-hati!).", "Makan satu gigitan cabai rawit (hati-hati!).",
+                "Biarkan pasanganmu menata rambutmu sesuka mereka.", "Nyanyikan lagu di tempat umum (simulasi jika di rumah).", "Makan satu sendok teh garam.", "Berikan pasanganmu *makeover* menggunakan riasanmu (atau produk lain yang aman).", "Berjalan di atas tangan dan kakimu seperti binatang selama 30 detik.",
+                "Biarkan pasanganmu memilih film atau acara TV yang paling kamu benci untuk ditonton.", "Makan satu sendok teh cuka.", "Berikan pasanganmu 'tattoo' temporer dengan spidol yang bisa dihapus.", "Berjalan di sekitar rumah dengan satu kaki selama 1 menit.", "Makan satu sendok teh mayones."
+            ],
+            Kenangan: [
+                "Ceritakan kenangan kencan pertama kalian.", "Sebutkan 3 hal yang paling kamu rindukan dari awal hubungan kalian.", "Ceritakan momen paling lucu yang pernah kalian alami bersama.", "Sebutkan tempat favorit kalian berdua dan mengapa.", "Ceritakan bagaimana kalian pertama kali bertemu.",
+                "Bagikan kenangan liburan terbaik kalian.", "Sebutkan hadiah paling berkesan yang pernah kamu terima dari pasanganmu.", "Ceritakan momen paling romantis yang pernah kalian alami.", "Sebutkan 3 hal yang telah berubah dalam hubungan kalian sejak awal.", "Bagikan kenangan paling memalukan yang pernah kalian alami bersama.",
+                "Sebutkan 3 hal yang paling kamu syukuri dari hubungan kalian.", "Ceritakan tentang tantangan yang pernah kalian hadapi bersama dan bagaimana kalian mengatasinya.", "Sebutkan lagu yang paling mengingatkanmu pada pasanganmu.", "Bagikan kenangan masa kecilmu yang paling lucu.", "Ceritakan tentang momen di mana kamu tahu bahwa pasanganmu adalah 'yang satu'.",
+                "Sebutkan 3 hal yang paling kamu sukai dari kebiasaan pasanganmu.", "Bagikan kenangan paling berkesan dari ulang tahun atau hari jadi kalian.", "Ceritakan tentang momen di mana kalian saling mendukung saat sulit.", "Sebutkan 3 hal yang ingin kamu pelajari lebih banyak tentang pasanganmu.", "Bagikan kenangan paling favoritmu tentang tawa pasanganmu.",
+                "Ceritakan tentang impian masa depan yang kalian miliki bersama.", "Sebutkan 3 hal yang kamu harapkan tidak akan pernah berubah dari hubungan kalian.", "Bagikan kenangan tentang makanan favorit yang pernah kalian masak atau makan bersama.", "Ceritakan tentang momen di mana kalian merasa paling terhubung.", "Sebutkan 3 hal yang membuatmu bangga dengan pasanganmu.",
+                "Bagikan kenangan tentang petualangan tak terduga yang pernah kalian alami.", "Ceritakan tentang tradisi kecil yang kalian miliki sebagai pasangan.", "Sebutkan 3 hal yang paling kamu hargai dari pasanganmu.", "Bagikan kenangan tentang bagaimana kalian mengatasi perbedaan pendapat.", "Ceritakan tentang momen di mana kalian merasa paling bahagia bersama."
+            ],
+            Impian: [
+                "Sebutkan 3 impian bersama yang ingin kalian capai.", "Rencanakan kencan impianmu bersama pasangan.", "Jika kalian bisa pergi ke mana saja di dunia, ke mana kalian akan pergi dan mengapa?", "Bagaimana kalian membayangkan diri kalian dalam 10 tahun ke depan?", "Apa satu hal baru yang ingin kalian coba bersama?",
+                "Impian apa yang kamu miliki untuk pasanganmu?", "Apa petualangan terbesar yang ingin kalian alami bersama?", "Bagaimana kalian ingin merayakan hari jadi ke-20 kalian?", "Apa yang ingin kalian ajarkan kepada anak-anak kalian (jika ada atau berencana)?", "Jika kalian bisa membangun rumah impian, seperti apa bentuknya?",
+                "Apa satu kebiasaan baru yang ingin kalian bangun bersama?", "Apa tujuan keuangan terbesar kalian sebagai pasangan?", "Bagaimana kalian ingin menghabiskan masa pensiun kalian?", "Apa yang ingin kalian capai secara pribadi, dan bagaimana pasanganmu bisa mendukungnya?", "Jika kalian bisa menciptakan tradisi baru, seperti apa tradisi itu?",
+                "Apa yang ingin kalian pelajari bersama?", "Bagaimana kalian ingin berkontribusi pada dunia sebagai pasangan?", "Apa mimpi paling gila yang kalian miliki untuk hubungan kalian?", "Jika kalian bisa bertemu diri kalian di masa depan, apa yang ingin kalian tanyakan?", "Apa satu hal yang ingin kalian lakukan sebelum kalian terlalu tua?",
+                "Bagaimana kalian ingin menjaga percikan api tetap menyala dalam hubungan kalian?", "Apa yang ingin kalian lakukan untuk membuat dunia menjadi tempat yang lebih baik bersama?", "Apa satu hal yang ingin kalian ubah tentang dunia jika kalian bisa?", "Bagaimana kalian ingin dikenang sebagai pasangan?", "Apa satu impian yang kamu miliki untuk diri sendiri yang ingin kamu bagikan dengan pasanganmu?"
+            ]
+        };
+        const punishments = [
+            "Nyanyikan lagu anak-anak dengan suara lucu.",
+            "Lakukan 10 *jumping jacks*.",
+            "Ceritakan lelucon yang paling tidak lucu yang kamu tahu.",
+            "Berjalan mundur selama 10 langkah.",
+            "Tirukan suara binatang selama 5 detik.",
+            "Berikan pujian acak kepada pasanganmu.",
+            "Lakukan 5 *squat*.",
+            "Ceritakan hal paling memalukan yang terjadi padamu hari ini.",
+            "Berikan *high five* yang sangat canggung.",
+            "Lakukan tarian robot selama 15 detik."
+        ];
+
+        let currentCategory = null;
+        let currentDare = null;
+        let currentPlayer = 1; // 1 for player 1, 2 for player 2
+        let playerScores = { player1: 0, player2: 0 };
+        let gameRoomData = null; // Store game state from Firestore
+
+        // Snakes and Ladders Game Variables
+        const snakesLaddersGameArea = document.getElementById('snakes-ladders-game-area');
+        const boardGrid = document.getElementById('boardGrid');
+        const rollDiceBtn = document.getElementById('rollDiceBtn');
+        const diceRollResultSpan = document.getElementById('diceRollResult');
+        const player1ScoreSLSpan = document.getElementById('player1ScoreSL');
+        const player2ScoreSLSpan = document.getElementById('player2ScoreSL');
+        const currentPlayerSLSpan = document.getElementById('currentPlayerSL');
+        const gameQuestionModal = document.getElementById('gameQuestionModal');
+        const questionLevelTitle = document.getElementById('questionLevelTitle');
+        const questionText = document.getElementById('questionText');
+        const answerInput = document.getElementById('answerInput');
+        const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+        const skipQuestionBtn = document.getElementById('skipQuestionBtn');
+
+        const boardSize = 10; // 10x10 board
+        const totalCells = boardSize * boardSize;
+        let playerPositions = {}; // { userId: cellNumber } - Changed to let
+        let cellCoordinates = {}; // { cellNumber: { x: px, y: px } } - Changed to let
+        let currentDiceRoll = 0;
+
+        // Ladder and Snake positions (start: end)
+        const ladders = {
+            3: 20, 6: 14, 11: 28, 15: 34, 22: 37,
+            38: 59, 49: 67, 57: 76, 61: 78, 73: 92,
+            81: 98
+        };
+        const snakes = {
+            16: 4, 19: 8, 23: 17, 30: 10, 35: 5,
+            44: 26, 54: 34, 62: 18, 70: 50, 83: 63,
+            91: 71, 95: 75, 99: 80
+        };
+
+        const questionsSL = {
+            level1: [
+                "Apa warna favorit pasanganmu?", "Apa makanan favorit pasanganmu?", "Apa hobi pasanganmu?", "Apa film favorit pasanganmu?", "Apa lagu favorit pasanganmu?",
+                "Apa hewan peliharaan impian pasanganmu?", "Apa tempat liburan impian pasanganmu?", "Apa pekerjaan impian pasanganmu?", "Apa warna rambut alami pasanganmu?", "Apa minuman favorit pasanganmu?",
+                "Apa nama panggilan masa kecil pasanganmu?", "Apa hal pertama yang kamu perhatikan dari pasanganmu?", "Apa yang paling membuat pasanganmu tertawa?", "Apa yang paling membuat pasanganmu bahagia?", "Apa yang paling membuat pasanganmu stres?",
+                "Apa kenangan paling berkesan pasanganmu bersamamu?", "Apa impian terbesar pasanganmu saat ini?", "Apa hal yang paling pasanganmu takuti?", "Apa yang paling pasanganmu banggakan dari dirinya?", "Apa yang paling pasanganmu sukai dari dirimu?",
+                "Apa yang pasanganmu lakukan untuk bersantai?", "Apa yang pasanganmu inginkan untuk makan malam ini?", "Apa yang pasanganmu lakukan di waktu luang?", "Apa yang pasanganmu tonton di TV?", "Apa yang pasanganmu baca baru-baru ini?",
+                "Apa yang pasanganmu lakukan untuk tetap bugar?", "Apa yang pasanganmu sukai dari cuaca?", "Apa yang pasanganmu lakukan saat bangun tidur?", "Apa yang pasanganmu lakukan sebelum tidur?", "Apa yang pasanganmu sukai dari kopi/teh?"
+            ],
+            level2: [
+                "Apa rahasia kecil pasanganmu yang kamu tahu?", "Apa kebiasaan pasanganmu yang paling aneh tapi kamu suka?", "Apa momen paling memalukan yang pernah kalian alami bersama?", "Apa hal yang paling kamu sesali dalam hubungan kalian?", "Apa hal yang paling kamu syukuri dari pasanganmu?",
+                "Apa impian terbesar pasanganmu yang belum tercapai?", "Apa ketakutan terbesar pasanganmu yang belum pernah mereka ceritakan padamu?", "Apa hal yang paling kamu ingin pasanganmu tahu tentangmu?", "Apa hal yang paling kamu ingin pasanganmu ubah dari dirinya (dengan lembut)?", "Apa yang paling kamu sukai dari senyum pasanganmu?",
+                "Apa hal paling gila yang pernah kamu lakukan demi pasanganmu?", "Apa hal yang paling kamu ingin lakukan bersama pasanganmu sebelum kalian terlalu tua?", "Apa yang kamu pikirkan tentang pasanganmu saat pertama kali bertemu?", "Apa yang paling kamu hargai dari dukungan pasanganmu?", "Apa satu hal yang ingin kamu pelajari dari pasanganmu?",
+                "Apa hal yang paling membuatmu merasa dicintai oleh pasanganmu?", "Apa yang kamu pikirkan tentang masa depan kalian berdua?", "Apa yang paling kamu rindukan dari awal hubungan kalian?", "Apa yang membuatmu merasa paling aman dengan pasanganmu?", "Apa hal yang paling kamu ingin perbaiki dalam hubungan kalian?",
+                "Apa yang kamu harapkan untuk masa depan pasanganmu?", "Apa yang paling kamu kagumi dari kekuatan pasanganmu?", "Apa hal yang paling kamu ingin lakukan untuk pasanganmu yang belum pernah kamu lakukan?", "Apa yang membuatmu merasa paling rentan dengan pasanganmu?", "Apa yang kamu pikirkan tentang cinta sejati?",
+                "Apa hal yang paling kamu ingin capai bersama pasanganmu tahun ini?", "Apa yang paling kamu sukai dari cara pasanganmu memecahkan masalah?", "Apa hal yang paling kamu ingin pasanganmu lakukan untuk dirinya sendiri?", "Apa yang membuatmu merasa paling terhubung dengan pasanganmu?", "Apa yang kamu pikirkan tentang takdir?"
+            ],
+            level3: [
+                "Kapan terakhir kali kamu dan pasanganmu 'berbuat nakal' dan di mana?", "Apa fantasi terliarmu dengan pasanganmu?", "Apa hal paling 'nakal' yang pernah kamu lakukan dengan pasanganmu di tempat umum?", "Apa satu hal yang kamu ingin pasanganmu lakukan padamu di kamar tidur?", "Apa posisi favoritmu saat 'bercinta' dengan pasanganmu?",
+                "Apa bagian tubuh pasanganmu yang paling kamu sukai?", "Apa yang paling membuatmu 'bergairah' dari pasanganmu?", "Apa hal paling 'nakal' yang pernah kamu bisikkan ke pasanganmu?", "Apa yang kamu ingin coba di ranjang dengan pasanganmu yang belum pernah kalian lakukan?", "Apa yang paling kamu sukai dari ciuman pasanganmu?",
+                "Apa hal paling 'nakal' yang pernah kamu impikan tentang pasanganmu?", "Apa yang kamu ingin pasanganmu kenakan (atau tidak kenakan) di ranjang?", "Apa hal paling 'nakal' yang pernah kamu lihat pasanganmu lakukan?", "Apa hal yang paling 'tabu' yang ingin kamu jelajahi dengan pasanganmu?", "Apa yang paling kamu sukai dari sentuhan pasanganmu?",
+                "Apa hal paling 'nakal' yang pernah kamu dengar pasanganmu katakan?", "Apa yang kamu ingin pasanganmu lakukan padamu saat kamu sedang mandi?", "Apa hal paling 'nakal' yang ingin kamu lakukan di tempat umum (tanpa ketahuan)?", "Apa yang paling kamu sukai dari suara pasanganmu saat 'bergairah'?", "Apa yang kamu ingin pasanganmu lakukan padamu saat kamu sedang tidur?",
+                "Apa hal paling 'nakal' yang pernah kamu lakukan sendirian sambil memikirkan pasanganmu?", "Apa yang kamu ingin pasanganmu kenakan saat kalian 'bercinta'?", "Apa hal paling 'nakal' yang ingin kamu lakukan di depan cermin dengan pasanganmu?", "Apa yang paling kamu sukai dari bau pasanganmu saat 'bergairah'?", "Apa yang kamu ingin pasanganmu lakukan padamu saat kalian sedang makan?",
+                "Apa hal paling 'nakal' yang pernah kamu lakukan di depan umum tanpa pasanganmu tahu?", "Apa yang kamu ingin pasanganmu lakukan padamu di dapur?", "Apa hal paling 'nakal' yang ingin kamu lakukan di dalam mobil dengan pasanganmu?", "Apa yang paling kamu sukai dari bibir pasanganmu saat mencium?", "Apa yang kamu ingin pasanganmu lakukan padamu di tempat kerja (simulasi)?"
+            ]
+        };
 
         // Firebase SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -952,6 +1364,7 @@
                         if (unsubscribeSavingGoals) { unsubscribeSavingGoals(); unsubscribeSavingGoals = null; }
                         if (unsubscribeHabits) { unsubscribeHabits(); unsubscribeHabits = null; }
                         if (unsubscribeUserProfile) { unsubscribeUserProfile(); unsubscribeUserProfile = null; }
+                        if (unsubscribeGame) { unsubscribeGame(); unsubscribeGame = null; } // Unsubscribe game listener
                     }
                 });
 
@@ -1009,6 +1422,7 @@
             if (unsubscribeHabits) { unsubscribeHabits(); }
             if (unsubscribeWishlist) { unsubscribeWishlist(); }
             // userProfile listener is handled separately as it's always private
+            if (unsubscribeGame) { unsubscribeGame(); } // Unsubscribe game listener
 
             // Firestore listener for Transactions (Keuangan)
             unsubscribeTransactions = onSnapshot(query(collection(db, getCollectionPath('transactions'))), (snapshot) => {
@@ -1097,6 +1511,7 @@
                         console.log("User's couple room ID updated:", currentCoupleRoomId);
                         setupCoupleRoomListener(currentCoupleRoomId); // Re-setup shared data listeners
                         setupFirestoreListeners(); // Re-initialize all listeners for shared data
+                        setupGameListener(); // Re-initialize game listener for shared data
                     } else if (!newCoupleRoomId && currentCoupleRoomId) {
                         // User left a room, switch back to private data
                         currentCoupleRoomId = null;
@@ -1105,6 +1520,7 @@
                         partnerUserIdSpan.textContent = 'Belum Terhubung';
                         if (unsubscribeCoupleRoom) { unsubscribeCoupleRoom(); unsubscribeCoupleRoom = null; }
                         setupFirestoreListeners(); // Re-initialize all listeners for private data
+                        if (unsubscribeGame) { unsubscribeGame(); unsubscribeGame = null; } // Unsubscribe game listener
                     }
                 } else {
                     // Profile document doesn't exist, initialize default values
@@ -1715,6 +2131,7 @@
                 window.showModal('Aplikasi belum siap. Mohon tunggu atau coba lagi.');
                 return;
             }
+            // FIX: Ensure currentCoupleRoomId is checked for calendar events
             if (!currentCoupleRoomId) {
                 window.showModal('Anda harus bergabung dengan ruangan pasangan untuk menambahkan event.');
                 return;
@@ -1722,6 +2139,7 @@
 
             try {
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                // FIX: Use shared collection path for calendar events
                 await addDoc(collection(db, `artifacts/${appId}/public/data/couples/${currentCoupleRoomId}/events`), {
                     date: date,
                     name: name,
@@ -2267,7 +2685,31 @@
                 await setDoc(newRoomRef, {
                     creatorId: userId,
                     partnerId: null,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    game: {
+                        currentGame: null, // No game selected initially
+                        currentPlayer: userId,
+                        currentDare: null,
+                        currentCategory: null,
+                        playerScores: {
+                            [userId]: 0
+                        },
+                        snakesAndLadders: {
+                            playerPositions: {
+                                [userId]: 1
+                            },
+                            currentPlayer: userId,
+                            diceRoll: 0,
+                            questionActive: false,
+                            currentQuestion: null,
+                            questionLevel: null,
+                            winner: null,
+                            gameStarted: false,
+                            playerScores: { // Separate scores for SL game
+                                [userId]: 0
+                            }
+                        }
+                    }
                 });
 
                 // Update user's profile with the new room ID
@@ -2278,6 +2720,7 @@
                 currentCoupleRoomId = newRoomRef.id; // Update local state
                 setupCoupleRoomListener(newRoomRef.id); // Start listening to the new room
                 setupFirestoreListeners(); // Re-initialize all listeners to point to shared data
+                setupGameListener(); // Re-initialize game listener for shared data
             } catch (e) {
                 console.error("Error creating room:", e);
                 window.showModal('Gagal membuat ruangan. Silakan coba lagi.');
@@ -2319,12 +2762,26 @@
                         // Ensure user's profile is updated if somehow it wasn't
                         await setDoc(userProfileRef, { coupleRoomId: roomIdToJoin }, { merge: true });
                     } else if (roomData.partnerId === null) {
-                        await updateDoc(roomRef, { partnerId: userId });
+                        // Initialize player's position and score for Snakes and Ladders
+                        const updatedGameData = { ...roomData.game };
+                        if (!updatedGameData.playerScores) updatedGameData.playerScores = {};
+                        updatedGameData.playerScores[userId] = 0;
+                        if (!updatedGameData.snakesAndLadders) updatedGameData.snakesAndLadders = {};
+                        if (!updatedGameData.snakesAndLadders.playerPositions) updatedGameData.snakesAndLadders.playerPositions = {};
+                        updatedGameData.snakesAndLadders.playerPositions[userId] = 1;
+                        if (!updatedGameData.snakesAndLadders.playerScores) updatedGameData.snakesAndLadders.playerScores = {};
+                        updatedGameData.snakesAndLadders.playerScores[userId] = 0;
+                        
+                        await updateDoc(roomRef, { 
+                            partnerId: userId, 
+                            game: updatedGameData 
+                        });
                         await setDoc(userProfileRef, { coupleRoomId: roomIdToJoin }, { merge: true });
                         window.showModal(`Berhasil bergabung ke ruangan: ${roomIdToJoin}`);
                         currentCoupleRoomId = roomIdToJoin; // Update local state
                         setupCoupleRoomListener(roomIdToJoin); // Start listening to the room
                         setupFirestoreListeners(); // Re-initialize all listeners to point to shared data
+                        setupGameListener(); // Re-initialize game listener for shared data
                     } else if (roomData.partnerId === userId) {
                         window.showModal('Anda sudah bergabung di ruangan ini.');
                     } else {
@@ -2383,7 +2840,7 @@
             if (!isAuthReady) { window.showModal('Mohon login terlebih dahulu.'); return; }
             // Check if in couple room. If not, show modal.
             if (!currentCoupleRoomId) {
-                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengakses fitur ini.');
+                window.showModal('Anda harus bergabung dengan ruangan pasangan untuk mengunggah foto.');
                 return;
             }
             window.showPage('picdrop-page');
@@ -2399,183 +2856,463 @@
             window.showPage('wishlist-page');
         });
 
-        // --- Jigsaw Puzzle Game Logic ---
-        // Handle image selection
-        selectImageBtn.addEventListener('click', () => {
-            puzzleImageInput.click();
-        });
-
-        puzzleImageInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    originalImage.onload = () => {
-                        startGameBtn.classList.remove('hidden');
-                        window.showMessageBox('Foto berhasil dimuat! Tekan "Mulai Puzzle" untuk bermain.');
-                    };
-                    originalImage.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+        // --- Game Selection Logic ---
+        selectKissOrDareBtn.addEventListener('click', () => {
+            gameSelectionScreen.classList.add('hidden');
+            kissOrDareGameArea.classList.remove('hidden');
+            snakesLaddersGameArea.classList.add('hidden'); // Hide SL game
+            // Initialize Kiss or Dare game state for the current room
+            if (currentCoupleRoomId && db) {
+                const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+                updateDoc(roomRef, {
+                    'game.currentGame': 'kissOrDare',
+                    'game.currentPlayer': userId, // Set current player for Kiss or Dare
+                    'game.currentDare': null,
+                    'game.currentCategory': null
+                }).catch(e => console.error("Error setting game to Kiss or Dare:", e));
             }
         });
 
-        // Start game
-        startGameBtn.addEventListener('click', () => {
-            if (!originalImage.src) {
-                window.showMessageBox('Mohon pilih foto terlebih dahulu!');
+        selectSnakesLaddersBtn.addEventListener('click', () => {
+            gameSelectionScreen.classList.add('hidden');
+            kissOrDareGameArea.classList.add('hidden'); // Hide Kiss or Dare game
+            snakesLaddersGameArea.classList.remove('hidden');
+            // Initialize Snakes and Ladders game state for the current room
+            if (currentCoupleRoomId && db) {
+                const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+                updateDoc(roomRef, {
+                    'game.currentGame': 'snakesAndLadders',
+                    'game.snakesAndLadders.gameStarted': true, // Auto-start Snakes and Ladders
+                    'game.snakesAndLadders.currentPlayer': userId, // Set current player
+                    'game.snakesAndLadders.diceRoll': 0,
+                    'game.snakesAndLadders.questionActive': false,
+                    'game.snakesAndLadders.currentQuestion': null,
+                    'game.snakesAndLadders.questionLevel': null,
+                    'game.snakesAndLadders.winner': null
+                }).catch(e => console.error("Error setting game to Snakes and Ladders:", e));
+            }
+        });
+
+
+        // --- Kiss or Dare Game Logic ---
+        const categoryButtonsKissDare = kissOrDareGameArea.querySelectorAll('.category-card'); // Use specific selector
+        categoryButtonsKissDare.forEach(button => {
+            button.addEventListener('click', () => {
+                currentCategory = button.dataset.category;
+                currentCategoryName.textContent = currentCategory;
+                kissOrDareCategorySelection.classList.add('hidden');
+                kissOrDarePlayArea.classList.remove('hidden');
+                updateGameUI();
+            });
+        });
+
+        dareCard.addEventListener('click', () => {
+            if (!dareCard.classList.contains('flipped')) {
+                const daresForCategory = categoriesKissDare[currentCategory]; // Use specific categories
+                if (daresForCategory && daresForCategory.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * daresForCategory.length);
+                    currentDare = daresForCategory[randomIndex];
+                    dareText.textContent = currentDare;
+                    dareCard.classList.add('flipped');
+                } else {
+                    window.showModal('Tidak ada tantangan untuk kategori ini!');
+                }
+            }
+        });
+
+        completeDareBtn.addEventListener('click', async () => {
+            if (!isAuthReady || !userId || !currentCoupleRoomId) return;
+            if (gameRoomData.game.currentGame !== 'kissOrDare' || gameRoomData.game.currentPlayer !== userId) {
+                window.showModal('Bukan giliran Anda atau game tidak aktif!');
                 return;
             }
-            createPuzzle();
-            resetGameBtn.classList.remove('hidden');
-            startGameBtn.classList.add('hidden');
-            selectImageBtn.classList.add('hidden');
+
+            const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+            const newScores = { ...gameRoomData.game.playerScores };
+            newScores[userId] = (newScores[userId] || 0) + 1;
+
+            const nextPlayer = gameRoomData.creatorId === userId ? gameRoomData.partnerId : gameRoomData.creatorId;
+            
+            await updateDoc(roomRef, {
+                'game.playerScores': newScores,
+                'game.currentPlayer': nextPlayer,
+                'game.currentDare': null,
+                'game.currentCategory': null
+            });
+            window.showModal('Tantangan berhasil diselesaikan!');
+            resetDareCard();
         });
 
-        // Reset game
-        resetGameBtn.addEventListener('click', () => {
-            puzzlePiecesContainer.innerHTML = '';
-            ctx.clearRect(0, 0, puzzleCanvas.width, puzzleCanvas.height);
-            resetGameBtn.classList.add('hidden');
-            startGameBtn.classList.remove('hidden');
-            selectImageBtn.classList.remove('hidden');
-            puzzleImageInput.value = ''; // Clear file input
-            originalImage = new Image(); // Reset image object
-            puzzlePieces = [];
+        spinPunishmentBtn.addEventListener('click', () => {
+            if (!isAuthReady || !userId || !currentCoupleRoomId) return;
+            if (gameRoomData.game.currentGame !== 'kissOrDare' || gameRoomData.game.currentPlayer !== userId) {
+                window.showModal('Bukan giliran Anda atau game tidak aktif!');
+                return;
+            }
+            showPunishmentSpinner();
         });
 
-        // Create puzzle pieces
-        function createPuzzle() {
-            // Adjust puzzle area size based on screen width
-            puzzleAreaSize = Math.min(window.innerWidth * 0.9, 400); // Max 400px or 90% of screen width
-            puzzleCanvas.width = puzzleAreaSize;
-            puzzleCanvas.height = puzzleAreaSize;
+        nextTurnKissDareBtn.addEventListener('click', async () => { // Renamed
+            if (!isAuthReady || !userId || !currentCoupleRoomId) return;
+            if (gameRoomData.game.currentGame !== 'kissOrDare' || gameRoomData.game.currentPlayer !== userId) {
+                window.showModal('Bukan giliran Anda atau game tidak aktif!');
+                return;
+            }
+            // This button is primarily for when a dare is skipped without punishment or just to advance turn
+            const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+            const nextPlayer = gameRoomData.creatorId === userId ? gameRoomData.partnerId : gameRoomData.creatorId;
+            await updateDoc(roomRef, {
+                'game.currentPlayer': nextPlayer,
+                'game.currentDare': null,
+                'game.currentCategory': null
+            });
+            resetDareCard();
+        });
 
-            pieceWidth = puzzleAreaSize / cols;
-            pieceHeight = puzzleAreaSize / rows;
+        function resetDareCard() {
+            dareCard.classList.remove('flipped');
+            dareText.textContent = '';
+            currentDare = null;
+            currentCategory = null;
+            currentCategoryName.textContent = '';
+            kissOrDareCategorySelection.classList.remove('hidden');
+            kissOrDarePlayArea.classList.add('hidden');
+            nextTurnKissDareBtn.classList.add('hidden');
+        }
 
-            puzzlePiecesContainer.innerHTML = '';
-            puzzlePiecesContainer.style.width = `${puzzleAreaSize}px`;
-            puzzlePiecesContainer.style.height = `${puzzleAreaSize}px`;
+        // --- Snakes and Ladders Game Logic ---
+        function initializeBoard() {
+            boardGrid.innerHTML = '';
+            cellCoordinates = {}; // Clear previous coordinates
+            for (let i = 1; i <= totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('board-cell');
+                // Determine cell number and its visual order (zigzag pattern)
+                let cellNumber;
+                const row = Math.floor((i - 1) / boardSize);
+                if (row % 2 === 0) { // Even rows (0, 2, 4...) are left-to-right
+                    cellNumber = i;
+                } else { // Odd rows (1, 3, 5...) are right-to-left
+                    cellNumber = (row * boardSize) + boardSize - (i - 1) % boardSize;
+                }
+                cell.textContent = cellNumber;
+                if (cellNumber % 2 === 0) {
+                    cell.classList.add('odd');
+                }
 
-            ctx.clearRect(0, 0, puzzleCanvas.width, puzzleCanvas.height); // Clear canvas before drawing
+                // Store coordinates for token positioning
+                // Calculate grid position (col, row)
+                const gridRow = boardSize - 1 - Math.floor((cellNumber - 1) / boardSize);
+                const gridCol = (Math.floor((cellNumber - 1) / boardSize) % 2 === 0) ? (cellNumber - 1) % boardSize : boardSize - 1 - (cellNumber - 1) % boardSize;
+                
+                // Calculate pixel position (approximate, for token placement)
+                // This will be relative to the boardGrid's top-left corner
+                const x = (gridCol * (boardGrid.offsetWidth / boardSize)) + (boardGrid.offsetWidth / boardSize / 2);
+                const y = (gridRow * (boardGrid.offsetHeight / boardSize)) + (boardGrid.offsetHeight / boardSize / 2);
+                cellCoordinates[cellNumber] = { x, y };
 
-            puzzlePieces = [];
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    const piece = document.createElement('div');
-                    piece.classList.add('puzzle-piece');
-                    piece.style.width = `${pieceWidth}px`;
-                    piece.style.height = `${pieceHeight}px`;
-                    piece.style.backgroundImage = `url(${originalImage.src})`;
-                    piece.style.backgroundPosition = `-${c * pieceWidth}px -${r * pieceHeight}px`;
+                boardGrid.appendChild(cell);
+            }
+
+            // Create player tokens
+            const player1Token = document.createElement('div');
+            player1Token.id = 'player1Token';
+            player1Token.classList.add('player-token');
+            player1Token.textContent = 'P1';
+            player1Token.style.backgroundColor = 'blue';
+            boardGrid.appendChild(player1Token);
+
+            const player2Token = document.createElement('div');
+            player2Token.id = 'player2Token';
+            player2Token.classList.add('player-token', 'player2');
+            player2Token.textContent = 'P2';
+            player2Token.style.backgroundColor = 'red';
+            boardGrid.appendChild(player2Token);
+        }
+
+        function updatePlayerTokenPosition(playerTokenId, cellNumber) {
+            const token = document.getElementById(playerTokenId);
+            if (token && cellCoordinates[cellNumber]) {
+                const { x, y } = cellCoordinates[cellNumber];
+                // Adjust for token size to center it
+                token.style.left = `${x - (token.offsetWidth / 2)}px`;
+                token.style.top = `${y - (token.offsetHeight / 2)}px`;
+            }
+        }
+
+        rollDiceBtn.addEventListener('click', async () => {
+            if (!isAuthReady || !userId || !currentCoupleRoomId) return;
+            if (gameRoomData.game.currentGame !== 'snakesAndLadders' || gameRoomData.game.snakesAndLadders.currentPlayer !== userId) {
+                window.showModal('Bukan giliran Anda!');
+                return;
+            }
+            if (gameRoomData.game.snakesAndLadders.questionActive) {
+                window.showModal('Jawab pertanyaan dulu!');
+                return;
+            }
+
+            const diceRoll = Math.floor(Math.random() * 6) + 1;
+            diceRollResultSpan.textContent = diceRoll;
+
+            const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+            const currentPosition = gameRoomData.game.snakesAndLadders.playerPositions[userId] || 1;
+            let newPosition = currentPosition + diceRoll;
+
+            if (newPosition >= totalCells) {
+                newPosition = totalCells; // Player wins!
+            }
+
+            // Update game state with new position and dice roll
+            await updateDoc(roomRef, {
+                'game.snakesAndLadders.diceRoll': diceRoll,
+                [`game.snakesAndLadders.playerPositions.${userId}`]: newPosition
+            });
+
+            // Check for win condition
+            if (newPosition === totalCells) {
+                await updateDoc(roomRef, {
+                    'game.snakesAndLadders.winner': userId,
+                    'game.snakesAndLadders.gameStarted': false // End game
+                });
+                window.showModal(`Selamat! ${userId === gameRoomData.creatorId ? 'Pemain 1' : 'Pemain 2'} menang!`);
+                return;
+            }
+
+            // Check for ladders/snakes and questions
+            setTimeout(async () => {
+                let finalPosition = newPosition;
+                let questionLevel = null;
+
+                if (ladders[newPosition]) {
+                    finalPosition = ladders[newPosition];
+                    // Determine question level based on ladder position
+                    if (newPosition <= 30) questionLevel = 'level1';
+                    else if (newPosition <= 70) questionLevel = 'level2';
+                    else questionLevel = 'level3';
+
+                    const randomQuestion = questionsSL[questionLevel][Math.floor(Math.random() * questionsSL[questionLevel].length)];
                     
-                    // Store correct position (targetX, targetY) and current position
-                    piece.dataset.correctCol = c;
-                    piece.dataset.correctRow = r;
-                    piece.dataset.correctX = c * pieceWidth;
-                    piece.dataset.correctY = r * pieceHeight;
-
-                    // Random initial position
-                    const randomX = Math.random() * (puzzleAreaSize - pieceWidth);
-                    const randomY = Math.random() * (puzzleAreaSize - pieceHeight);
-                    piece.style.left = `${randomX}px`;
-                    piece.style.top = `${randomY}px`;
-
-                    puzzlePieces.push(piece);
-                    puzzlePiecesContainer.appendChild(piece);
-
-                    addDragListeners(piece);
-                }
-            }
-            // Shuffle pieces (already randomized by initial position, but can add more shuffling logic)
-        }
-
-        function addDragListeners(piece) {
-            piece.addEventListener('mousedown', dragStart);
-            piece.addEventListener('mouseup', dragEnd);
-            piece.addEventListener('mousemove', drag);
-
-            piece.addEventListener('touchstart', dragStart, { passive: false });
-            piece.addEventListener('touchend', dragEnd);
-            piece.addEventListener('touchmove', drag, { passive: false });
-        }
-
-        function dragStart(e) {
-            if (e.target.classList.contains('correct')) {
-                return; // Don't drag already correct pieces
-            }
-            activePiece = e.target;
-            activePiece.classList.add('dragging');
-
-            if (e.type === "touchstart") {
-                initialX = e.touches[0].clientX - activePiece.getBoundingClientRect().left;
-                initialY = e.touches[0].clientY - activePiece.getBoundingClientRect().top;
-            } else {
-                initialX = e.clientX - activePiece.getBoundingClientRect().left;
-                initialY = e.clientY - activePiece.getBoundingClientRect().top;
-            }
-            e.preventDefault(); // Prevent scrolling on touch devices
-        }
-
-        function drag(e) {
-            if (activePiece) {
-                e.preventDefault(); // Prevent scrolling on touch devices
-                if (e.type === "touchmove") {
-                    currentX = e.touches[0].clientX - initialX;
-                    currentY = e.touches[0].clientY - initialY;
+                    await updateDoc(roomRef, {
+                        [`game.snakesAndLadders.playerPositions.${userId}`]: finalPosition, // Move player up ladder first
+                        'game.snakesAndLadders.questionActive': true,
+                        'game.snakesAndLadders.currentQuestion': randomQuestion,
+                        'game.snakesAndLadders.questionLevel': questionLevel
+                    });
+                    showGameQuestionModal(randomQuestion, questionLevel);
+                } else if (snakes[newPosition]) {
+                    finalPosition = snakes[newPosition];
+                    await updateDoc(roomRef, {
+                        [`game.snakesAndLadders.playerPositions.${userId}`]: finalPosition // Move player down snake
+                    });
+                    window.showModal(`Oh tidak! Anda mendarat di ular! Turun ke kotak ${finalPosition}.`);
+                    showPunishmentSpinnerSL(); // Show punishment for landing on snake
                 } else {
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
+                    // No ladder/snake, just advance turn
+                    const nextPlayer = gameRoomData.creatorId === userId ? gameRoomData.partnerId : gameRoomData.creatorId;
+                    await updateDoc(roomRef, {
+                        'game.snakesAndLadders.currentPlayer': nextPlayer
+                    });
                 }
+            }, 600); // Small delay for visual movement
+        });
 
-                activePiece.style.left = `${currentX}px`;
-                activePiece.style.top = `${currentY}px`;
-            }
+        // Question Modal for Snakes and Ladders
+        function showGameQuestionModal(question, level) {
+            questionLevelTitle.textContent = `Pertanyaan Level ${level.replace('level', '')}`;
+            questionText.textContent = question;
+            answerInput.value = '';
+            gameQuestionModal.classList.remove('hidden');
         }
 
-        function dragEnd(e) {
-            if (activePiece) {
-                activePiece.classList.remove('dragging');
-                const rect = activePiece.getBoundingClientRect();
-                const containerRect = puzzlePiecesContainer.getBoundingClientRect();
+        submitAnswerBtn.addEventListener('click', async () => {
+            const userAnswer = answerInput.value.trim();
+            // For simplicity, any non-empty answer is considered correct for now.
+            // In a real game, you'd compare to a predefined correct answer.
+            const isCorrect = userAnswer !== ''; 
 
-                // Calculate position relative to puzzle container
-                const finalX = rect.left - containerRect.left;
-                const finalY = rect.top - containerRect.top;
+            if (!isAuthReady || !userId || !currentCoupleRoomId) return;
 
-                const correctX = parseFloat(activePiece.dataset.correctX);
-                const correctY = parseFloat(activePiece.dataset.correctY);
+            const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+            const nextPlayer = gameRoomData.creatorId === userId ? gameRoomData.partnerId : gameRoomData.creatorId;
 
-                // Define a tolerance for snapping
-                const tolerance = pieceWidth * 0.2; // 20% of piece width
+            if (isCorrect) {
+                window.showModal('Jawaban Benar! Lanjutkan giliran.');
+                await updateDoc(roomRef, {
+                    'game.snakesAndLadders.questionActive': false,
+                    'game.snakesAndLadders.currentQuestion': null,
+                    'game.snakesAndLadders.questionLevel': null,
+                    'game.snakesAndLadders.currentPlayer': nextPlayer // Advance turn
+                });
+            } else {
+                window.showModal('Jawaban Salah! Anda mendapat hukuman.');
+                await updateDoc(roomRef, {
+                    'game.snakesAndLadders.questionActive': false,
+                    'game.snakesAndLadders.currentQuestion': null,
+                    'game.snakesAndLadders.questionLevel': null
+                });
+                showPunishmentSpinnerSL(); // Show punishment
+            }
+            gameQuestionModal.classList.add('hidden');
+        });
 
-                if (Math.abs(finalX - correctX) < tolerance && Math.abs(finalY - correctY) < tolerance) {
-                    // Snap to correct position
-                    activePiece.style.left = `${correctX}px`;
-                    activePiece.style.top = `${correctY}px`;
-                    activePiece.classList.add('correct');
-                    checkWin();
+        skipQuestionBtn.addEventListener('click', async () => {
+            if (!isAuthReady || !userId || !currentCoupleRoomId) return;
+
+            window.showModal('Anda melewati pertanyaan. Anda mendapat hukuman.');
+            const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+            await updateDoc(roomRef, {
+                'game.snakesAndLadders.questionActive': false,
+                'game.snakesAndLadders.currentQuestion': null,
+                'game.snakesAndLadders.questionLevel': null
+            });
+            showPunishmentSpinnerSL(); // Show punishment
+            gameQuestionModal.classList.add('hidden');
+        });
+
+        // Shared Punishment Spinner Logic (reused and adapted for SL)
+        spinWheelBtn.addEventListener('click', () => {
+            spinWheelBtn.disabled = true;
+            punishmentResult.classList.add('hidden');
+            spinnerWheel.style.setProperty('--final-rotation', '0deg'); // Reset rotation
+
+            const numPunishments = punishments.length;
+            const degreesPerSegment = 360 / numPunishments;
+            const randomIndex = Math.floor(Math.random() * numPunishments);
+            const finalRotation = (360 * 5) + (randomIndex * degreesPerSegment) + (degreesPerSegment / 2); // Spin multiple times + land in middle of segment
+
+            spinnerWheel.style.setProperty('--final-rotation', `${finalRotation}deg`);
+            spinnerWheel.classList.add('spinning');
+
+            setTimeout(async () => {
+                spinnerWheel.classList.remove('spinning');
+                const chosenPunishment = punishments[randomIndex];
+                punishmentResult.querySelector('span').textContent = chosenPunishment;
+                punishmentResult.classList.remove('hidden');
+                closePunishmentModalBtn.classList.remove('hidden');
+
+                // Advance turn after punishment for Snakes and Ladders
+                const roomRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+                const nextPlayer = gameRoomData.creatorId === userId ? gameRoomData.partnerId : gameRoomData.creatorId;
+                await updateDoc(roomRef, {
+                    'game.snakesAndLadders.currentPlayer': nextPlayer
+                });
+            }, 3000); // Match CSS animation duration
+        });
+
+        closePunishmentModalBtn.addEventListener('click', () => {
+            punishmentModal.classList.add('hidden');
+            spinWheelBtn.disabled = false;
+            // No need to reset dare card here, as it's handled by SL game flow
+        });
+
+        function showPunishmentSpinnerSL() { // Specific function for SL game
+            punishmentModal.classList.remove('hidden');
+            punishmentResult.classList.add('hidden');
+            closePunishmentModalBtn.classList.add('hidden');
+            spinnerWheel.innerHTML = ''; // Clear old segments
+            
+            const numSegments = punishments.length;
+            const segmentAngle = 360 / numSegments;
+            const colors = ['#FFD700', '#FF6347', '#6A5ACD', '#3CB371', '#FFA07A', '#4682B4', '#DDA0DD', '#FF4500', '#20B2AA', '#8A2BE2']; // More colors
+
+            punishments.forEach((punishment, index) => {
+                const segment = document.createElement('div');
+                segment.classList.add('spinner-segment');
+                segment.style.backgroundColor = colors[index % colors.length];
+                segment.style.transform = `rotate(${index * segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`;
+                
+                const textSpan = document.createElement('span');
+                textSpan.textContent = punishment;
+                textSpan.style.transform = `skewY(${90 - segmentAngle}deg) rotate(${segmentAngle / 2}deg)`; // Counter-rotate text
+                segment.appendChild(textSpan);
+                spinnerWheel.appendChild(segment);
+            });
+        }
+
+        // Setup game listener (must be called after currentCoupleRoomId is set)
+        function setupGameListener() {
+            if (!db || !currentCoupleRoomId) {
+                console.warn("Firestore or couple room ID not ready for game listener.");
+                return;
+            }
+            const gameRef = doc(db, `artifacts/${firebaseConfig.appId}/public/data/couples`, currentCoupleRoomId);
+            if (unsubscribeGame) { unsubscribeGame(); } // Unsubscribe previous listener
+            unsubscribeGame = onSnapshot(gameRef, async (docSnap) => {
+                if (docSnap.exists() && docSnap.data().game) {
+                    gameRoomData = docSnap.data();
+                    const game = gameRoomData.game;
+                    
+                    // Update Kiss or Dare scores/UI
+                    player1ScoreKissDareSpan.textContent = game.playerScores[gameRoomData.creatorId] || 0;
+                    player2ScoreKissDareSpan.textContent = game.playerScores[gameRoomData.partnerId] || 0;
+                    currentPlayerKissDareSpan.textContent = game.currentPlayer === gameRoomData.creatorId ? 'Pemain 1' : 'Pemain 2';
+
+                    // Update Snakes and Ladders scores/UI
+                    player1ScoreSLSpan.textContent = game.snakesAndLadders.playerScores ? (game.snakesAndLadders.playerScores[gameRoomData.creatorId] || 0) : 0;
+                    player2ScoreSLSpan.textContent = game.snakesAndLadders.playerScores ? (game.snakesAndLadders.playerScores[gameRoomData.partnerId] || 0) : 0;
+                    currentPlayerSLSpan.textContent = game.snakesAndLadders.currentPlayer === gameRoomData.creatorId ? 'Pemain 1' : 'Pemain 2';
+                    diceRollResultSpan.textContent = game.snakesAndLadders.diceRoll || 0;
+
+                    // Handle game specific UI visibility
+                    if (game.currentGame === 'kissOrDare') {
+                        kissOrDareGameArea.classList.remove('hidden');
+                        snakesLaddersGameArea.classList.add('hidden');
+                        gameSelectionScreen.classList.add('hidden'); // Hide game selection
+                        if (game.currentDare) {
+                            dareText.textContent = game.currentDare;
+                            currentCategoryName.textContent = game.currentCategory;
+                            dareCard.classList.add('flipped');
+                            kissOrDareCategorySelection.classList.add('hidden');
+                            kissOrDarePlayArea.classList.remove('hidden');
+                            nextTurnKissDareBtn.classList.remove('hidden');
+                        } else {
+                            resetDareCard();
+                        }
+                    } else if (game.currentGame === 'snakesAndLadders') {
+                        kissOrDareGameArea.classList.add('hidden');
+                        snakesLaddersGameArea.classList.remove('hidden');
+                        gameSelectionScreen.classList.add('hidden'); // Hide game selection
+                        initializeBoard(); // Re-draw board on state change
+                        updatePlayerTokenPosition('player1Token', game.snakesAndLadders.playerPositions[gameRoomData.creatorId] || 1);
+                        updatePlayerTokenPosition('player2Token', game.snakesAndLadders.playerPositions[gameRoomData.partnerId] || 1);
+
+                        if (game.snakesAndLadders.winner) {
+                            window.showModal(`Selamat! ${game.snakesAndLadders.winner === gameRoomData.creatorId ? 'Pemain 1' : 'Pemain 2'} memenangkan Ular Tangga!`);
+                            // Optionally reset game here
+                        } else if (game.snakesAndLadders.questionActive && game.snakesAndLadders.currentQuestion) {
+                            showGameQuestionModal(game.snakesAndLadders.currentQuestion, game.snakesAndLadders.questionLevel);
+                        }
+                    } else {
+                        // No game selected or game ended
+                        kissOrDareGameArea.classList.add('hidden');
+                        snakesLaddersGameArea.classList.add('hidden');
+                        gameSelectionScreen.classList.remove('hidden');
+                    }
+
+                } else {
+                    // Game state not found or room dissolved
+                    gameRoomData = null;
+                    resetDareCard(); // Reset Kiss or Dare UI
+                    // Reset Snakes and Ladders UI
+                    snakesLaddersGameArea.classList.add('hidden');
+                    gameSelectionScreen.classList.remove('hidden');
+                    player1ScoreSLSpan.textContent = 0;
+                    player2ScoreSLSpan.textContent = 0;
+                    currentPlayerSLSpan.textContent = 'Pemain 1';
+                    diceRollResultSpan.textContent = '';
                 }
-                activePiece = null;
-            }
+            }, (error) => {
+                console.error("Error fetching game data:", error);
+                window.showModal('Gagal memuat data game. Silakan coba lagi.');
+            });
         }
 
-        function checkWin() {
-            const allCorrect = Array.from(puzzlePiecesContainer.children).every(piece => piece.classList.contains('correct'));
-            if (allCorrect) {
-                window.showMessageBox('Selamat! Puzzle berhasil diselesaikan!');
-                resetGameBtn.classList.remove('hidden');
-                startGameBtn.classList.add('hidden');
-                selectImageBtn.classList.add('hidden');
-            }
-        }
-
-        // Handle responsive resizing
+        // Snakes and Ladders board setup on load
+        window.addEventListener('load', () => {
+            initializeBoard();
+        });
         window.addEventListener('resize', () => {
-            if (originalImage.src) { // Only recreate if an image is loaded
-                createPuzzle();
-            }
+            initializeBoard(); // Re-initialize board on resize to adjust token positions
         });
     </script>
 </body>
