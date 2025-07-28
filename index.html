@@ -432,7 +432,7 @@
                 <button id="change-partner-pic-btn" class="text-sm text-blue-600 hover:underline mt-1">Ubah Foto</button>
                 <input type="text" id="partner-nickname-input" placeholder="Nama Panggilan Kamu" class="w-full p-2 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-2">
                 <button id="save-partner-nickname-btn" class="w-full px-4 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition-colors">Simpan Nama Panggilan</button>
-                <div class="flex items-center text-sm text-gray-600">
+                <div class="user-id-container flex items-center text-sm text-gray-600 hidden"> <!-- Default hidden -->
                     User ID: <span id="user-id-display" class="font-mono text-gray-800 ml-1">Loading...</span>
                     <button id="toggle-user-id-btn" class="ml-2 px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded-md">Tampilkan/Sembunyikan ID</button>
                 </div>
@@ -584,7 +584,7 @@
 
             <div class="flex flex-col items-start w-full">
                 <label for="photo-caption" class="text-gray-700 text-sm font-medium mb-1">Keterangan Foto:</label>
-                <input type="text" id="photo-caption" placeholder="Contoh: Kencan di pantai" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="photo-caption" placeholder="Contoh: Kamera Upload Polaroid" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <input type="file" id="photo-upload-input" accept="image/*" class="hidden">
                 <button id="select-photo-btn" class="mt-4 w-full px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors">Pilih Foto</button>
                 <button id="upload-photo-btn" class="mt-2 w-full px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors hidden">Unggah Foto (Simulasi)</button>
@@ -878,7 +878,8 @@
         const joinRoomBtn = document.getElementById('join-room-btn');
         const roomStatusSpan = document.getElementById('room-status');
         const toggleUserIdBtn = document.getElementById('toggle-user-id-btn'); // Tombol toggle User ID
-        const userIdDisplayContainer = document.querySelector('.flex.items-center.text-sm.text-gray-600'); // Container User ID
+        // Mengubah selektor untuk userIdDisplayContainer agar lebih spesifik
+        const userIdDisplayContainer = document.querySelector('#pasangan-page .user-id-container'); 
 
         let currentCoupleRoomId = null; // To store the active couple room ID
         let currentPartnerId = null; // To store the partner's ID
@@ -901,7 +902,7 @@
                             await signOut(auth); // Sign out anonymous user
                             userId = null;
                             isAuthReady = false;
-                            if (userIdDisplayContainer) { // Null check added here
+                            if (userIdDisplayContainer) { 
                                 userIdDisplayContainer.classList.add('hidden');
                             }
                             logoutButton.classList.add('hidden');
@@ -912,9 +913,8 @@
                         // For authenticated (non-anonymous) users
                         userId = user.uid;
                         const userIdDisplayElement = document.getElementById('user-id-display');
-                        if (userIdDisplayElement) { // Null check added here
+                        if (userIdDisplayElement) { 
                             userIdDisplayElement.textContent = userId;
-                            // userIdDisplayElement.parentElement.classList.add('hidden'); // Awalnya sembunyikan, akan di-toggle
                         }
                         // Sembunyikan User ID secara default saat login, bisa di-toggle nanti
                         if (userIdDisplayContainer) {
@@ -934,9 +934,8 @@
                         // No user (or signed out anonymous user)
                         userId = null;
                         const userIdDisplayElement = document.getElementById('user-id-display');
-                        if (userIdDisplayElement) { // Null check added here
+                        if (userIdDisplayElement) { 
                             userIdDisplayElement.textContent = 'Not Authenticated';
-                            // userIdDisplayElement.parentElement.classList.add('hidden'); // Pastikan tersembunyi
                         }
                         if (userIdDisplayContainer) {
                             userIdDisplayContainer.classList.add('hidden');
@@ -973,9 +972,11 @@
             } catch (error) {
                 console.error("Error initializing Firebase or authenticating:", error);
                 const userIdDisplayElement = document.getElementById('user-id-display');
-                if (userIdDisplayElement) { // Null check added here
+                if (userIdDisplayElement) { 
                     userIdDisplayElement.textContent = 'Error loading user ID';
-                    userIdDisplayElement.parentElement.classList.add('hidden'); // Sembunyikan User ID display
+                }
+                if (userIdDisplayContainer) {
+                    userIdDisplayContainer.classList.add('hidden');
                 }
                 window.showModal('Terjadi kesalahan saat memuat aplikasi. Mohon coba lagi.');
                 window.showPage('auth-page'); // Fallback to auth page on init error
@@ -1934,7 +1935,7 @@
                 const simulatedImageUrl = e.target.result; // This is a Data URL (base64)
                 uploadedPhotos.push({
                     src: simulatedImageUrl, // Using base64 for demo purposes
-                    caption: caption || 'Tanpa Keterangan',
+                    caption: caption || 'Kamera Upload Polaroid', // Mengubah nama ikon
                     date: new Date().toISOString()
                 });
                 renderPhotoGallery();
@@ -1946,7 +1947,7 @@
                 polaroid.classList.add('polaroid-photo');
                 polaroid.innerHTML = `
                     <img src="${simulatedImageUrl}" alt="${caption}">
-                    <p>${caption || 'No Caption'}</p>
+                    <p>${caption || 'Kamera Upload Polaroid'}</p>
                 `;
                 cameraOutputFrame.appendChild(polaroid);
 
